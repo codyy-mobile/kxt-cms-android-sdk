@@ -4,14 +4,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class CmsException extends Exception {
-    private CmsErrorCode cmsErrorCode;
+    private int cmsErrorCode;
 
-    public CmsException(CmsErrorCode cmsErrorCode, String message) {
+    public CmsException(int cmsErrorCode, String message) {
         super(message);
         this.cmsErrorCode = cmsErrorCode;
     }
 
-    public CmsErrorCode getCmsErrorCode() {
+    public int getCmsErrorCode() {
         return cmsErrorCode;
     }
 
