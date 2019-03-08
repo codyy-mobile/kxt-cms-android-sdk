@@ -18,4 +18,28 @@ public class User {
             this.attributes.setUserNumber(userNumber);
         }
     }
+
+    public UserAttributes getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(UserAttributes attributes) {
+        this.attributes = attributes;
+    }
+
+    public Environment getEnv() {
+        return env;
+    }
+
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
+
+    public UserStates getStates() {
+        return states;
+    }
+
+    public void setStates(UserStates states) {
+        this.states = states;
+    }
 }

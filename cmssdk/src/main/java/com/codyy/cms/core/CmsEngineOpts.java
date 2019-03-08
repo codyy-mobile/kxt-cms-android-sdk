@@ -23,6 +23,39 @@ public class CmsEngineOpts {
      */
     private int tokenLifeTime;
 
+    public CmsEngineOpts() {
+    }
+
+    public CmsEngineOpts(String appId) {
+        this.appId = appId;
+    }
+
+    public CmsEngineOpts(String appId, String appCertificate) {
+        this.appId = appId;
+        this.appCertificate = appCertificate;
+    }
+
+    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount) {
+        this.appId = appId;
+        this.appCertificate = appCertificate;
+        this.reconnectCount = reconnectCount;
+    }
+
+    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime) {
+        this.appId = appId;
+        this.appCertificate = appCertificate;
+        this.reconnectCount = reconnectCount;
+        this.reconnectTime = reconnectTime;
+    }
+
+    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime, int tokenLifeTime) {
+        this.appId = appId;
+        this.appCertificate = appCertificate;
+        this.reconnectCount = reconnectCount;
+        this.reconnectTime = reconnectTime;
+        this.tokenLifeTime = tokenLifeTime;
+    }
+
     public String getAppId() {
         return appId;
     }
