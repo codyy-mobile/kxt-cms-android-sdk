@@ -39,8 +39,8 @@ public @interface MessageName {
 
     String TEXTCHAT_SEND_MSG = "textchat_send_msg";
     String TEXTCHAT_DELETE_MSG = "textchat_delete_msg";
-    String TEXTCHAT_DISABLE_ALL_CHAT = "textchat_disable_all_chat";
-    String TEXTCHAT_ENABLE_ALL_CHAT = "textchat_enable_all_chat";
+    String TEXTCHAT_DISABLE_CHAT = "textchat_disable_chat";
+    String TEXTCHAT_ENABLE_CHAT = "textchat_enable_chat";
     String TEXTCHAT_ASK_QUESTION = "textchat_ask_question";
     String TEXTCHAT_SHOW_QUESTION = "textchat_shwo_question";
     String TEXTCHAT_HIDE_QUESTION = "textchat_hide_question";

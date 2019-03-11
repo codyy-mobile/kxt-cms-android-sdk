@@ -36,6 +36,11 @@ public class MessageResult {
     public MessageResult() {
     }
 
+    public MessageResult(String msgId, boolean hasSent) {
+        this.msgId = msgId;
+        this.hasSent = hasSent;
+    }
+
     public String getMsgId() {
         return msgId;
     }

@@ -15,6 +15,9 @@ public class EventEmitter {
     public void addListener(String eventName, MessageHandler messageHandler) {
         maps.put(eventName, messageHandler);
     }
+    public void removeListener(String eventName) {
+        maps.remove(eventName);
+    }
 
     public void emit(String eventName, Message message) {
         if (maps.containsKey(eventName)) {

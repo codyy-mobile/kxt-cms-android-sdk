@@ -1,39 +1,39 @@
 package com.codyy.cms.core.user;
 
 public class UserAttributes {
-    private int userId;
-    private String userNumber;
-    private String userName;
+    public int userId;
+    public String userNumber;
+    public String userName;
     /**
      * 用户角色
      * {@link com.codyy.cms.core.definition.UserRole}
      */
-    private String userRole;
+    public String userRole;
     /**
      * 用户课堂内角色
      * {@link com.codyy.cms.core.definition.ClassUserRole}
      */
-    private String classUserRole;
+    public String classUserRole;
     /**
      * 用户登录时间
      */
-    private long loginTime;
+    public long loginTime;
     /**
      * 用户后台运行时长
      */
-    private int inactiveTime;
+    public int inactiveTime;
     /**
      * 用户举手次数
      */
-    private int handupTimes;
+    public int handupTimes;
     /**
      * 用户在线时长
      */
-    private int onlineTime;
+    public int onlineTime;
     /**
      * 用户签到次数
      */
-    private int signinTimes = 0;
+    public int signinTimes = 0;
 
     public UserAttributes() {
     }

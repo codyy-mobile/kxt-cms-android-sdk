@@ -6,20 +6,20 @@ public class UserStates {
     /**
      * 是否在线
      */
-    private boolean isOnline;
+    public boolean isOnline;
     /**
      * 禁言状态
      */
-    private boolean allowChat;
+    public boolean allowChat;
     /**
      * 是否在举手
      */
-    private boolean isHandingUp;
-    private String speakingState = SpeakingState.NO;
+    public boolean isHandingUp;
+    public String speakingState = SpeakingState.NO;
     /**
      * 是否签过到
      */
-    private boolean isSignedIn;
+    public boolean isSignedIn;
 
     public UserStates() {
     }

@@ -1,17 +1,17 @@
 package com.codyy.cms.core.definition;
 
-public class MessageBody {
-    private Object object;
+public class MessageBody<T> {
+    private T object;
 
-    public Object getObject() {
-        return object;
-    }
-
-    public void setObject(Object object) {
+    public MessageBody(T object) {
         this.object = object;
     }
 
-    public MessageBody(Object object) {
+    public T getObject() {
+        return object;
+    }
+
+    public void setObject(T object) {
         this.object = object;
     }
 }

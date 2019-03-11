@@ -4,14 +4,19 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.codyy.cms.MessageDispatcher;
 import com.codyy.cms.agora.SignalingToken;
 import com.codyy.cms.core.user.User;
-import com.codyy.cms.utils.GeneralEvent;
+import com.codyy.cms.ext.UserMsgModule;
 import com.codyy.cms.utils.LoggerUtils;
 import com.orhanobut.logger.Logger;
 
-import io.agora.AgoraAPI;
-import io.agora.AgoraAPIOnlySignal;
+import io.agora.rtm.ErrorInfo;
+import io.agora.rtm.IResultCallback;
+import io.agora.rtm.RtmClient;
+import io.agora.rtm.RtmClientListener;
+import io.agora.rtm.RtmMessage;
+import io.agora.rtm.RtmStatusCode;
 
 /**
  * Account: User-[liveclassID]-[userId]@codyy.com
@@ -19,27 +24,45 @@ import io.agora.AgoraAPIOnlySignal;
  */
 public class CmsEngine {
     private static final String TAG = "CMS_LOGGER";
-    private AgoraAPIOnlySignal signal;
+    /**
+     * RtmClient 支持多实例，每个实例独立工作互不干扰，多个实例创建时可以用相同的 context，但是事件回调 RtmClientListener 必须是不同的实例。
+     * 当 RtmClient 实例不再使用的时候，可以调用实例的 destroy 方法进行销毁释放资源。
+     */
+    private RtmClient mRtmClient;
     private static volatile CmsEngine cmsEngineInstance;
     /**
      * 课堂id
      */
     private int liveClassId;
-    private User userInfo;
     private CmsEngineOpts options;
-    private int msgCount = 0;
-    /**
-     * 固定值0
-     */
-    private static final int uid = 0;
-    /**
-     * 暂时无用，设置为空
-     */
-    private static final String deviceID = "";
+
     /**
      * 用户在信令的账号
      */
-    private String account;
+    private String rtmAccount;
+    /**
+     * 消息引擎实例
+     */
+    private MessageEngine msgEngine;
+
+    /**
+     * 消息分发对象实例
+     *
+     * @private
+     * @type {MessageDispatcher}
+     * @memberof CmsEngine
+     */
+    private MessageDispatcher msgDispatcher;
+
+    /**
+     * 负责创建消息
+     *
+     * @private
+     * @type {MessageFactory}
+     * @memberof CmsEngine
+     */
+    private MessageFactory msgFactory;
+    private UserMsgModule userMsgModule;
 
     public static CmsEngine getInstance() {
         if (cmsEngineInstance == null) {
@@ -59,7 +82,7 @@ public class CmsEngine {
      * @param context application context
      * @param opts    配置信息
      */
-    public void setupCmsEngine(Context context, CmsEngineOpts opts) {
+    public void init(Context context, CmsEngineOpts opts, int liveClassId) {
         try {
             if (opts == null) {
                 throw new NullPointerException("CmsEngineOpts is null");
@@ -71,28 +94,72 @@ public class CmsEngine {
                 opts.setTokenLifeTime(CmsConfig.DEFAULT_TOKEN_LIFE_TIME);
             }
             this.options = opts;
-            signal = AgoraAPIOnlySignal.getInstance(context, opts.getAppId());
-            validateSignal();
-            callbackSet();
-
+            this.liveClassId = liveClassId;
+            mRtmClient = RtmClient.createInstance(context, opts.getAppId(), mRtmClientListener);
         } catch (Exception e) {
             Logger.e(Log.getStackTraceString(e));
             throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
         }
     }
 
+    private RtmClientListener mRtmClientListener = new RtmClientListener() {
+        @Override
+        public void onConnectionStateChanged(int state, int reason) {
+            // See the constants defined in RtmStatusCode.ConnectionState and RtmStatusCode.ConnectionChangeReason.
+            switch (state) {
+                case RtmStatusCode.ConnectionState.CONNECTION_STATE_RECONNECTING:
+//                    showToast(getString(R.string.reconnecting));
+                    break;
+                case RtmStatusCode.ConnectionState.CONNECTION_STATE_ABORTED:
+//                    showToast(getString(R.string.account_offline));
+//                    setResult(MessageUtil.ACTIVITY_RESULT_CONN_ABORTED);
+//                    finish();
+                    break;
+            }
+        }
+
+        @Override
+        public void onMessageReceived(RtmMessage message, String peerId) {
+            //通过 message.getText 方法可以获取到消息文本内容。接收到的 RtmMessage 消息对象不能重复利用再用于发送
+            //peerId 是消息发送方的用户账号 ID。
+            try {
+                if (msgEngine != null) {
+                    msgEngine.onMessage(peerId, message);
+                }
+            } catch (CmsException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+
     /**
      * 登录信令系统
-     * 在登录前,必须先实例化 {@link CmsEngine#setupCmsEngine(Context, CmsEngineOpts)}
+     * 在登录前,必须先实例化 {@link CmsEngine#init(Context, CmsEngineOpts, int)}
      */
-    public void login(int liveClassId, int userId, String userName, String userNumber) {
-        validateSignal();
-        this.liveClassId = liveClassId;
-        this.userInfo = new User(userId, userName, userNumber);
-        this.account = this.generateAccount();
+    public void login(LoginOptions loginOptions) {
+        if (mRtmClient == null)
+            throw new NullPointerException("When use login method ,RtmClient can not be null");
+        this.rtmAccount = this.generateRtmAccount(loginOptions.getUserId());
         // 登录 Agora 信令系统
         try {
-            signal.login(options.getAppId(), account, SignalingToken.getOneDayToken(options.getAppId(), options.getAppCertificate(), account), uid, deviceID);
+            mRtmClient.login(SignalingToken.getOneDayToken(options.getAppId(), options.getAppCertificate(), rtmAccount), rtmAccount, new IResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void responseInfo) {
+                    // Login succeeds.
+                    msgEngine = new MessageEngine(getInstance(), generateChannelId(), new MsgEngineOpts(getInstance(), mRtmClient, liveClassId, loginOptions.getUserId()));
+                    msgDispatcher = new MessageDispatcher();
+                    msgFactory = new MessageFactory();
+                    initMsgModules(loginOptions, msgFactory);
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    int errorCode = errorInfo.getErrorCode();
+                    // Login fails. See the error codes defined in RtmStatusCode.LoginError.
+//                    Logger.e(GeneralEvent.getEventString(errorCode));
+                }
+            });
         } catch (Exception e) {
             Logger.e(Log.getStackTraceString(e));
             throw new RuntimeException("SignalingToken error\n" + Log.getStackTraceString(e));
@@ -100,98 +167,89 @@ public class CmsEngine {
     }
 
     /**
-     * 信令监听回调
+     * 初始化 message modules
+     *
+     * @protected
+     * @memberof CmsEngine
      */
-    private void callbackSet() {
-        signal.callbackSet(new AgoraAPI.CallBack() {
-            @Override
-            public void onLoginSuccess(int uid, int fd) {//uid:固定填0;fd:小阔不使用此参数,Agora 内部参数
-                super.onLoginSuccess(uid, fd);
-                channelJoin();
-            }
+    protected void initMsgModules(LoginOptions loginOpts, MessageFactory msgFactory) {
+        this.userMsgModule = new UserMsgModule(new User(loginOpts), msgEngine, msgFactory);
+        this.registerMsgModule(this.userMsgModule);
+        msgFactory.setUserMsgModule(this.userMsgModule);
 
-            @Override
-            public void onLogout(int ecode) {//错误代码
-                super.onLogout(ecode);
-                Logger.d("ecode:" + ecode, GeneralEvent.getEventString(ecode));
-            }
-
-            @Override
-            public void onLoginFailed(int ecode) {//错误代码
-                super.onLoginFailed(ecode);
-                Logger.d("ecode:" + ecode, GeneralEvent.getEventString(ecode));
-            }
-
-            @Override
-            public void onMessageSendSuccess(String messageID) {//消息发送成功回调
-                super.onMessageSendSuccess(messageID);
-            }
-
-            @Override
-            public void onMessageSendError(String messageID, int ecode) {//消息发送失败回调
-                super.onMessageSendError(messageID, ecode);
-                Logger.d("ecode:" + ecode, GeneralEvent.getEventString(ecode));
-            }
-
-            @Override
-            public void onMessageInstantReceive(String account, int uid, String msg) {
-                super.onMessageInstantReceive(account, uid, msg);//对端收到消息回调
-            }
-
-            @Override
-            public void onChannelJoined(String channelID) {
-                super.onChannelJoined(channelID);// 设置加入频道成功回调
-            }
-
-            @Override
-            public void onChannelJoinFailed(String channelID, int ecode) {
-                super.onChannelJoinFailed(channelID, ecode);// 设置加入频道失败回调
-                Logger.d("ecode:" + ecode, GeneralEvent.getEventString(ecode));
-            }
-        });
+//        this.classMsgModule = new ClassMsgModule(this.getMessageEngine(), msgFactory);
+//        this.registerMsgModule(this.classMsgModule);
+//
+//        this.textchatMsgModule = new TextchatMsgModule(this.getMessageEngine(), msgFactory);
+//        this.registerMsgModule(this.textchatMsgModule);
+//
+//        this.whiteboardMsgModule = new WhiteboardMsgModule(this.getMessageEngine(), msgFactory);
+//        this.registerMsgModule(this.whiteboardMsgModule);
+//
+//        this.sysMsgModule = new SysMsgModule(this.getMessageEngine(), msgFactory);
+//        this.registerMsgModule(this.sysMsgModule);
     }
 
     /**
-     * 发送点对点消息
+     * Return instance of UserMsgModule.
+     *
+     * @returns {UserMsgModule}
+     * @memberof CmsEngine
      */
-    public void messageInstantSend(String msg) {
-        validateSignal();
-        signal.messageInstantSend(account, uid, msg, getNextMsgId());
+    UserMsgModule getUserMsgModule() {
+        return this.userMsgModule;
     }
 
     /**
-     * 发送频道消息
+     * Register message module and subscribe message.
+     *
+     * @param {MessageModule} msgModule
+     * @memberof CmsEngine
      */
-    public void messageChannelSend(String msg) {
-        validateSignal();
-        signal.messageChannelSend(generateChannelId(), msg, getNextMsgId());
+    public void registerMsgModule(MessageModule msgModule) {
+        this.getMsgDispatcher().subscribe(msgModule);
     }
 
-    // 加入频道
-    private void channelJoin() {
-        validateSignal();
-        signal.channelJoin(generateChannelId());
-    }
-    // 退出频道
-    private void channelLeave() {
-        validateSignal();
-        signal.channelLeave(generateChannelId());
+    /**
+     * Unregister message module.
+     *
+     * @param {MessageModule} msgModule
+     * @memberof CmsEngine
+     */
+    public void unregisterMsgModule(MessageModule msgModule) {
+        this.getMsgDispatcher().unsubscribe(msgModule);
     }
 
-    private void validateSignal() {
-        if (signal == null) {
-            throw new NullPointerException("AgoraAPIOnlySignal is null");
-        }
+    public MessageDispatcher getMsgDispatcher() {
+        return msgDispatcher;
+    }
+
+    public MessageFactory getMsgFactory() {
+        return msgFactory;
+    }
+
+
+    public String getRtmAccount() {
+        return rtmAccount;
+    }
+
+    public MessageEngine getMsgEngine() {
+        return msgEngine;
     }
 
     /**
      * 退出信令系统
      */
     public void logout() {
-        validateSignal();
-        channelLeave();
-        signal.logout();
+        unregisterMsgModule(this.userMsgModule);
+        if (msgEngine != null) {
+            msgEngine.channelLeave();
+        }
+        if (mRtmClient != null) {
+            mRtmClient.logout(null);
+        }
     }
+
 
     /**
      * Generate channel id with channel and live class id.
@@ -201,39 +259,23 @@ public class CmsEngine {
     }
 
     /**
-     * Generate account with live class id and user id, the account is used to register in Agora RTM system.
+     * Generate rtmAccount with live class id and user id, the rtmAccount is used to register in Agora RTM system.
      * Account: User-[liveclassID]-[userId]@codyy.com
      */
-    private String generateAccount() {
+    private String generateRtmAccount(int userId) {
         return "User" + CmsConfig.SEPARATOR_OF_ACCOUNT + this.liveClassId + CmsConfig.SEPARATOR_OF_ACCOUNT
-                + this.userInfo.getAttributes().getUserId() + CmsConfig.SUFFIX_OF_ACCOUNT;
+                + userId + CmsConfig.SUFFIX_OF_ACCOUNT;
     }
 
     /**
-     * Generate next message id.
-     */
-    private String getNextMsgId() {
-        // Generate id
-        String id = this.liveClassId + "-" + this.userInfo.getAttributes().getUserId() + "-" + this.msgCount;
-
-        // Increase message count.
-        this.msgCount++;
-//        this.saveMsgCount();
-
-        return id;
-    }
-
-    /**
-     * default is true
-     */
-    public void setLog(boolean isLoggable) {
-        LoggerUtils.setIsLoggable(isLoggable);
-    }
-
-    /**
-     * default is {@link com.orhanobut.logger.Logger#DEBUG}
+     * default is {@link RtmClient#LOG_FILTER_DEBUG}
      */
     public void setLogLevel(int logLevel) {
-        LoggerUtils.setLogLevel(logLevel);
+//        LoggerUtils.setLogLevel(logLevel);
+        mRtmClient.setLogFilter(logLevel);
+    }
+
+    public RtmClient getRtmClient() {
+        return mRtmClient;
     }
 }

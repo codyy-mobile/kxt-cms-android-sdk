@@ -17,9 +17,12 @@ public class EventEmitterUnitTest {
     @Test
     public void addition_isCorrect() {
         EventEmitter eventEmitter = new EventEmitter();
+        Event2 event2=new Event2();
         eventEmitter.on("click", new EventHandler());
         eventEmitter.addListener("click", new EventHandler());
+        event2.addListener("click2", new EventHandler());
         eventEmitter.emit("click", new Message());
+        event2.emit("click2", new Message());
     }
 
     public class EventHandler implements MessageHandler {
@@ -27,6 +30,13 @@ public class EventEmitterUnitTest {
         @Override
         public void handle(String msgName, Message message) {
             System.out.println("处理事件" + msgName + message.getClass().getSimpleName());
+        }
+    }
+
+    public class Event2 extends EventEmitter {
+
+        public void addListener(String eventName, MessageHandler messageHandler) {
+            super.addListener(eventName, messageHandler);
         }
     }
 }

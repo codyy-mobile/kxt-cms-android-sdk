@@ -8,52 +8,56 @@ public class MessageHeader {
      * 消息ID（id）
      * 由三部份组成，每部分用“-”做连接符，第一部分为live class id，第二部分为user id，第三部分为从0开始的自增自然整数，消息id为变长，最小长度为5字节。
      */
-    private String id;
+    public String id;
     /**
      * 消息全局名称，英文，128字节限制. Not null
      * {@link MessageName}
      */
-    private String name;
+    public String name;
     /**
      * 消息内部版本号，默认为‘1.0.0’.
      */
-    private String version = "1.0.0";
+    public String version = "1.0.0";
     /**
      * 消息类型，枚举类型. Not null
      */
-    private String type;
+    public String type;
     /**
      * 消息发送类型，枚举类型，只发送时有意义，消息接收时此字段无意义。Not null
      */
-    private String sendType;
+    public String sendType;
     /**
      * 消息发送者阔地用户id
      */
-    private int userId;
+    public int userId;
+    /**
+     * 用户在声网的account
+     */
+    public String rtmAccount;
     /**
      * 消息接受者阔地用户账号列表. 由于性能问题，接收人数小于等于30人时使用CP2M，超过30人使用CP2A方式。
      */
-    private ArrayList<Integer> targetUserIds;
+    public ArrayList<Integer> targetUserIds;
     /**
      * 消息时间戳， long型. Not null
      */
-    private long timestamp;
+    public long timestamp;
     /**
      * 消息发送者所在的通道Id.
      */
-    private String channelId;
+    public String channelId;
     /**
      * 消息是否有回复，如有回复发送者需要创建回调等待回复到达，回复超时为10秒钟。true/false。只支持点对点消息
      */
-    private boolean hasResponse;
+    public boolean hasResponse;
     /**
      * 是否为应答消息。
      */
-    private boolean isResponse;
+    public boolean isResponse;
     /**
      * 消息应答时，填入响应消息的id
      */
-    private String originalId;
+    public String originalId;
 
     public String getId() {
         return id;
@@ -149,5 +153,13 @@ public class MessageHeader {
 
     public void setOriginalId(String originalId) {
         this.originalId = originalId;
+    }
+
+    public String getRtmAccount() {
+        return rtmAccount;
+    }
+
+    public void setRtmAccount(String rtmAccount) {
+        this.rtmAccount = rtmAccount;
     }
 }

@@ -2,10 +2,12 @@ package com.codyy.cms.core.user;
 
 import android.text.TextUtils;
 
+import com.codyy.cms.core.LoginOptions;
+
 public class User {
-    private UserAttributes attributes;
-    private Environment env;
-    private UserStates states;
+    public UserAttributes attributes;
+    public Environment env;
+    public UserStates states;
 
     public User(int userId, String userName, String userNumber) {
         this.attributes = new UserAttributes();
@@ -17,6 +19,17 @@ public class User {
         if (!TextUtils.isEmpty(userNumber)) {
             this.attributes.setUserNumber(userNumber);
         }
+    }
+
+    public User(LoginOptions loginOpts) {
+        this.attributes = new UserAttributes();
+        this.env = new Environment();
+        this.states = new UserStates();
+
+        this.attributes.setUserId(loginOpts.getUserId());
+        this.attributes.setUserName(loginOpts.getUserName());
+        this.attributes.setUserRole(loginOpts.getUserRole());
+        this.attributes.setClassUserRole(loginOpts.getClassUserRole());
     }
 
     public UserAttributes getAttributes() {
