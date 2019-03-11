@@ -1,19 +1,18 @@
-package com.codyy.cms.ext;
+package com.codyy.cms.ext.user;
 
 import android.util.SparseArray;
 
 import com.codyy.cms.core.AbstractMsgModule;
+import com.codyy.cms.core.CmsException;
 import com.codyy.cms.core.LoginOptions;
 import com.codyy.cms.core.MessageEngine;
 import com.codyy.cms.core.MessageFactory;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
-import com.codyy.cms.core.definition.MessageResult;
 import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.core.definition.NoChatScope;
 import com.codyy.cms.core.definition.SpeakingState;
-import com.codyy.cms.core.user.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,6 +176,7 @@ public class UserMsgModule extends AbstractMsgModule {
             return user == null ? SpeakingState.NO : user.states.speakingState;
         }
     }
+
     /**
      * 广播发送用户信息
      * Call by anyone.
@@ -184,8 +184,8 @@ public class UserMsgModule extends AbstractMsgModule {
      * @returns {Promise<MessageResult>}
      * @memberof UserMsgModule
      */
-    public MessageResult sendUserInfoMsg(){
-        return this.sendMessage(this.getMessageFactory().createSendUserInfoMsg(this.getMe()));
+    public void sendUserInfoMsg() throws CmsException {
+        this.sendMessage(this.getMessageFactory().createSendUserInfoMsg(this.getMe()));
     }
 
     @Override
@@ -195,6 +195,7 @@ public class UserMsgModule extends AbstractMsgModule {
 
     @Override
     public ArrayList<String> getWatchMsgNames() {
+
         return new ArrayList<>(Arrays.asList(watchMsgNames));
     }
 

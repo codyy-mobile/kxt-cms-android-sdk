@@ -3,8 +3,8 @@ package com.codyy.cms.core;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageHeader;
 import com.codyy.cms.core.definition.MessagesRuleDef;
-import com.codyy.cms.core.user.User;
-import com.codyy.cms.ext.UserMsgModule;
+import com.codyy.cms.ext.user.User;
+import com.codyy.cms.ext.user.UserMsgModule;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

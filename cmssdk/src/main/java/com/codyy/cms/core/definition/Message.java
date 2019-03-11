@@ -7,6 +7,10 @@ public class Message<T> {
     public Message() {
     }
 
+    public Message(MessageHeader header) {
+        this.header = header;
+    }
+
     public Message(MessageHeader header, T body) {
         this.header = header;
         this.body = body;

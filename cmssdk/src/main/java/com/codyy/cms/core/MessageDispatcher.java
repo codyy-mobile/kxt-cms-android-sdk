@@ -1,7 +1,5 @@
-package com.codyy.cms;
+package com.codyy.cms.core;
 
-import com.codyy.cms.core.MessageHandler;
-import com.codyy.cms.core.MessageModule;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.event.EventEmitter;
 

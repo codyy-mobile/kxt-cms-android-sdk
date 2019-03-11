@@ -5,7 +5,6 @@ import android.util.SparseArray;
 
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageHeader;
-import com.codyy.cms.core.definition.MessageResult;
 import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.core.definition.MsgSendType;
 import com.codyy.cms.utils.CombineUtils;
@@ -27,12 +26,6 @@ import io.agora.rtm.RtmChannelListener;
 import io.agora.rtm.RtmChannelMember;
 import io.agora.rtm.RtmMessage;
 import io.agora.rtm.RtmStatusCode;
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Scheduler;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 public class MessageEngine {
     private CmsEngine cmsEngine;
@@ -88,14 +81,17 @@ public class MessageEngine {
         rtmChannel = cmsEngine.getRtmClient().createChannel(this.channelId, new RtmChannelListener() {
             @Override
             public void onMessageReceived(RtmMessage message, RtmChannelMember fromMember) {
-
+                try {
+                    onMessage(fromMember.getUserId(), message);
+                } catch (CmsException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
             public void onMemberJoined(RtmChannelMember member) {
                 mChannelMemberCount.incrementAndGet();
                 refreshMemberCount();
-
             }
 
             @Override
@@ -328,7 +324,11 @@ public class MessageEngine {
                     // 设置用户id和信令账号
                     setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
                     // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
-                    cmsEngine.getUserMsgModule().sendUserInfoMsg();
+                    try {
+                        cmsEngine.getUserMsgModule().sendUserInfoMsg();
+                    } catch (CmsException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override

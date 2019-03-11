@@ -81,6 +81,8 @@ public class MessagesRuleDef {
             = new MessagesRuleDef(MessageName.CLASS_END, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
     public static final MessagesRuleDef CLASS_START_SIGNIN
             = new MessagesRuleDef(MessageName.CLASS_START_SIGNIN, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
+    public static final MessagesRuleDef CLASS_END_SIGNIN
+            = new MessagesRuleDef(MessageName.CLASS_END_SIGNIN, MessageType.CLASS, MsgSendType.CP2A, empty, empty);
     public static final MessagesRuleDef CLASS_SIGNIN
             = new MessagesRuleDef(MessageName.CLASS_SIGNIN, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.ANONYMOUSE_ADMIN));
     public static final MessagesRuleDef CLASS_HAND_UP

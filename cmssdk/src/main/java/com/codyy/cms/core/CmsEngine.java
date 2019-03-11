@@ -4,10 +4,13 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.codyy.cms.MessageDispatcher;
 import com.codyy.cms.agora.SignalingToken;
-import com.codyy.cms.core.user.User;
-import com.codyy.cms.ext.UserMsgModule;
+import com.codyy.cms.ext.user.User;
+import com.codyy.cms.ext.cls.ClassMsgModule;
+import com.codyy.cms.ext.sys.SysMsgModule;
+import com.codyy.cms.ext.textchat.TextchatMsgModule;
+import com.codyy.cms.ext.user.UserMsgModule;
+import com.codyy.cms.ext.whiteboard.WhiteboardMsgModule;
 import com.codyy.cms.utils.LoggerUtils;
 import com.orhanobut.logger.Logger;
 
@@ -63,6 +66,10 @@ public class CmsEngine {
      */
     private MessageFactory msgFactory;
     private UserMsgModule userMsgModule;
+    private ClassMsgModule classMsgModule;
+    private SysMsgModule sysMsgModule;
+    private TextchatMsgModule textchatMsgModule;
+    private WhiteboardMsgModule whiteboardMsgModule;
 
     public static CmsEngine getInstance() {
         if (cmsEngineInstance == null) {
@@ -173,21 +180,21 @@ public class CmsEngine {
      * @memberof CmsEngine
      */
     protected void initMsgModules(LoginOptions loginOpts, MessageFactory msgFactory) {
-        this.userMsgModule = new UserMsgModule(new User(loginOpts), msgEngine, msgFactory);
+        this.userMsgModule = new UserMsgModule(new User(loginOpts), this.getMsgEngine(), msgFactory);
         this.registerMsgModule(this.userMsgModule);
         msgFactory.setUserMsgModule(this.userMsgModule);
 
-//        this.classMsgModule = new ClassMsgModule(this.getMessageEngine(), msgFactory);
-//        this.registerMsgModule(this.classMsgModule);
-//
-//        this.textchatMsgModule = new TextchatMsgModule(this.getMessageEngine(), msgFactory);
-//        this.registerMsgModule(this.textchatMsgModule);
-//
-//        this.whiteboardMsgModule = new WhiteboardMsgModule(this.getMessageEngine(), msgFactory);
-//        this.registerMsgModule(this.whiteboardMsgModule);
-//
-//        this.sysMsgModule = new SysMsgModule(this.getMessageEngine(), msgFactory);
-//        this.registerMsgModule(this.sysMsgModule);
+        this.classMsgModule = new ClassMsgModule(this.getMsgEngine(), msgFactory);
+        this.registerMsgModule(this.classMsgModule);
+
+        this.textchatMsgModule = new TextchatMsgModule(this.getMsgEngine(), msgFactory);
+        this.registerMsgModule(this.textchatMsgModule);
+
+        this.whiteboardMsgModule = new WhiteboardMsgModule(this.getMsgEngine(), msgFactory);
+        this.registerMsgModule(this.whiteboardMsgModule);
+
+        this.sysMsgModule = new SysMsgModule(this.getMsgEngine(), msgFactory);
+        this.registerMsgModule(this.sysMsgModule);
     }
 
     /**

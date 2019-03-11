@@ -1,4 +1,4 @@
-package com.codyy.cms.core.user;
+package com.codyy.cms.ext.user;
 
 import com.codyy.cms.core.definition.SpeakingState;
 
