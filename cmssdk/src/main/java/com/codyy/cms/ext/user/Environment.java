@@ -1,15 +1,20 @@
 package com.codyy.cms.ext.user;
 
+import android.os.Build;
+
+import com.codyy.cms.core.definition.Device;
+import com.codyy.cms.core.definition.OS;
+
 public class Environment {
     /**
      * {@link com.codyy.cms.core.definition.Device}
      */
-    private String device;
+    private String device = Device.PHONE;
     /**
      * {@link com.codyy.cms.core.definition.OS}
      */
-    private String os;
-    private String osVersion="1.0.0";
+    private String os = OS.ANDROID;
+    private String osVersion = Build.VERSION.RELEASE;
     /**
      * 浏览器类型和版本
      */
@@ -23,7 +28,7 @@ public class Environment {
      */
     private boolean video;
     /**
-     *  true:有麦克风， false：没麦克风
+     * true:有麦克风， false：没麦克风
      */
     private boolean audio;
 

@@ -12,6 +12,10 @@ import com.codyy.cms.utils.GsonUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 
+import org.jdeferred2.Deferred;
+import org.jdeferred2.Promise;
+import org.jdeferred2.impl.DeferredObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,6 +30,8 @@ import io.agora.rtm.RtmChannelListener;
 import io.agora.rtm.RtmChannelMember;
 import io.agora.rtm.RtmMessage;
 import io.agora.rtm.RtmStatusCode;
+
+import static com.codyy.cms.agora.RtmStatusCode.JoinChannelError.JOIN_CHANNEL_ERR_OK;
 
 public class MessageEngine {
     private CmsEngine cmsEngine;
@@ -131,7 +137,7 @@ public class MessageEngine {
         if (header.targetUserIds != null && header.targetUserIds.size() > 30 && MsgSendType.CP2M.equals(header.sendType)) {
             throw new CmsException(CmsException.CmsErrorCode.MSG_TARGETS_OUT_OF_LIMIT, "Size of targetUserIds(" + header.targetUserIds.size() + ") is out of limit.");
         }
-        Logger.i("[Sent sender=" + header.userId + ", msg=" + header.name + " ]: ", new Gson().toJson(message));
+        Logger.i("[Sent sender=" + header.userId + ", msg=" + header.name + " ]: " + new Gson().toJson(message));
         if (MsgSendType.CP2M.equals(header.sendType)) {
             if (header.targetUserIds.size() == 1) {
                 Message msg = (Message) CombineUtils.combineSydwCore(message, new Message());
@@ -141,7 +147,7 @@ public class MessageEngine {
                 RtmMessage sendMsg = RtmMessage.createMessage();
                 sendMsg.setText(new Gson().toJson(message));
                 cmsEngine.getRtmClient().sendMessageToPeer(userIdMap.get(header.targetUserIds.get(0)), sendMsg, state -> {
-                    Logger.i("sendMessageToPeer", state);
+//                    Logger.i("sendMessageToPeer", state);
                 });
             } else {
                 for (int i : header.targetUserIds) {
@@ -152,7 +158,7 @@ public class MessageEngine {
                     RtmMessage sendMsg = RtmMessage.createMessage();
                     sendMsg.setText(new Gson().toJson(message));
                     cmsEngine.getRtmClient().sendMessageToPeer(userIdMap.get(header.targetUserIds.get(0)), sendMsg, state -> {
-                        Logger.i("sendMessageToPeer", state);
+//                        Logger.i("sendMessageToPeer", state);
                     });
                 }
             }
@@ -162,7 +168,7 @@ public class MessageEngine {
             RtmMessage sendMsg = RtmMessage.createMessage();
             sendMsg.setText(new Gson().toJson(message));
             rtmChannel.sendMessage(sendMsg, newState -> {
-                Logger.i("sendMessageToPeer", newState);
+//                Logger.i("sendMessageToPeer"+ newState+ sendMsg.getText());
                 // See RtmStatusCode.ChannelMessageState for the message states.
 //                switch (newState) {
 //                    case RtmStatusCode.ChannelMessageState.CHANNEL_MESSAGE_SENT_TIMEOUT:
@@ -338,6 +344,37 @@ public class MessageEngine {
                 }
             });
         }
+    }
+
+    public Promise<Integer, Throwable, Void> joinChannel2() {
+        Deferred<Integer, Throwable, Void> deferred = new DeferredObject<>();
+        if (rtmChannel != null) {
+            rtmChannel.join(new IResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void responseInfo) {
+                    // Join a channel succeeds.
+                    // 设置用户id和信令账号
+                    setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
+                    // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
+                    try {
+                        cmsEngine.getUserMsgModule().sendUserInfoMsg();
+                    } catch (CmsException e) {
+                        e.printStackTrace();
+                        deferred.reject(e);
+                    } finally {
+                        deferred.resolve(JOIN_CHANNEL_ERR_OK);
+                    }
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    int errorCode = errorInfo.getErrorCode();
+                    deferred.reject(new CmsException(errorCode, ""));
+                    // Join a channel fails. See the error codes defined in RtmStatusCode.JoinChannelError.
+                }
+            });
+        }
+        return deferred.promise();
     }
 
 

@@ -5,14 +5,18 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.codyy.cms.agora.SignalingToken;
-import com.codyy.cms.ext.user.User;
 import com.codyy.cms.ext.cls.ClassMsgModule;
 import com.codyy.cms.ext.sys.SysMsgModule;
 import com.codyy.cms.ext.textchat.TextchatMsgModule;
+import com.codyy.cms.ext.user.User;
 import com.codyy.cms.ext.user.UserMsgModule;
 import com.codyy.cms.ext.whiteboard.WhiteboardMsgModule;
 import com.codyy.cms.utils.LoggerUtils;
 import com.orhanobut.logger.Logger;
+
+import org.jdeferred2.Deferred;
+import org.jdeferred2.Promise;
+import org.jdeferred2.impl.DeferredObject;
 
 import io.agora.rtm.ErrorInfo;
 import io.agora.rtm.IResultCallback;
@@ -103,6 +107,7 @@ public class CmsEngine {
             this.options = opts;
             this.liveClassId = liveClassId;
             mRtmClient = RtmClient.createInstance(context, opts.getAppId(), mRtmClientListener);
+            setLogLevel(0);
         } catch (Exception e) {
             Logger.e(Log.getStackTraceString(e));
             throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
@@ -112,16 +117,8 @@ public class CmsEngine {
     private RtmClientListener mRtmClientListener = new RtmClientListener() {
         @Override
         public void onConnectionStateChanged(int state, int reason) {
-            // See the constants defined in RtmStatusCode.ConnectionState and RtmStatusCode.ConnectionChangeReason.
-            switch (state) {
-                case RtmStatusCode.ConnectionState.CONNECTION_STATE_RECONNECTING:
-//                    showToast(getString(R.string.reconnecting));
-                    break;
-                case RtmStatusCode.ConnectionState.CONNECTION_STATE_ABORTED:
-//                    showToast(getString(R.string.account_offline));
-//                    setResult(MessageUtil.ACTIVITY_RESULT_CONN_ABORTED);
-//                    finish();
-                    break;
+            if (options.getCmsListener() != null) {
+                options.getCmsListener().onStateChanged(state, reason);
             }
         }
 
@@ -139,11 +136,11 @@ public class CmsEngine {
         }
     };
 
-
     /**
      * 登录信令系统
      * 在登录前,必须先实例化 {@link CmsEngine#init(Context, CmsEngineOpts, int)}
      */
+    @Deprecated
     public void login(LoginOptions loginOptions) {
         if (mRtmClient == null)
             throw new NullPointerException("When use login method ,RtmClient can not be null");
@@ -173,13 +170,48 @@ public class CmsEngine {
         }
     }
 
+    public Promise<String, Throwable, Void> login2(LoginOptions loginOptions) {
+        Deferred<String, Throwable, Void> deferred = new DeferredObject<>();
+        if (mRtmClient == null) {
+            throw new NullPointerException("When use login method ,RtmClient can not be null");
+        }
+        rtmAccount = generateRtmAccount(loginOptions.getUserId());
+        // 登录 Agora 信令系统
+        try {
+            mRtmClient.login(loginOptions.isDebug ? null : SignalingToken.getOneDayToken(options.getAppId(), options.getAppCertificate(), rtmAccount), rtmAccount, new IResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void responseInfo) {
+                    // Login succeeds.
+                    msgEngine = new MessageEngine(getInstance(), generateChannelId(), new MsgEngineOpts(getInstance(), mRtmClient, liveClassId, loginOptions.getUserId()));
+                    msgDispatcher = new MessageDispatcher();
+                    msgFactory = new MessageFactory();
+                    initMsgModules(loginOptions, msgFactory);
+                    deferred.resolve(rtmAccount);
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    int errorCode = errorInfo.getErrorCode();
+                    deferred.reject(new CmsException(errorCode, ""));
+                    // Login fails. See the error codes defined in RtmStatusCode.LoginError.
+//                    Logger.e(GeneralEvent.getEventString(errorCode));
+                }
+            });
+        } catch (Exception e) {
+            deferred.reject(e);
+            Logger.e(Log.getStackTraceString(e));
+            throw new RuntimeException("SignalingToken error\n" + Log.getStackTraceString(e));
+        }
+        return deferred.promise();
+    }
+
     /**
      * 初始化 message modules
      *
      * @protected
      * @memberof CmsEngine
      */
-    protected void initMsgModules(LoginOptions loginOpts, MessageFactory msgFactory) {
+    private void initMsgModules(LoginOptions loginOpts, MessageFactory msgFactory) {
         this.userMsgModule = new UserMsgModule(new User(loginOpts), this.getMsgEngine(), msgFactory);
         this.registerMsgModule(this.userMsgModule);
         msgFactory.setUserMsgModule(this.userMsgModule);
@@ -249,6 +281,9 @@ public class CmsEngine {
      */
     public void logout() {
         unregisterMsgModule(this.userMsgModule);
+        unregisterMsgModule(this.whiteboardMsgModule);
+        unregisterMsgModule(this.textchatMsgModule);
+        unregisterMsgModule(this.sysMsgModule);
         if (msgEngine != null) {
             msgEngine.channelLeave();
         }

@@ -12,11 +12,19 @@ public class LoginOptions {
      */
     private String classUserRole;
 
+    public boolean isDebug;
     public LoginOptions(int userId, String userName, String userRole, String classUserRole) {
         this.userId = userId;
         this.userName = userName;
         this.userRole = userRole;
         this.classUserRole = classUserRole;
+    }
+    public LoginOptions(int userId, String userName, String userRole, String classUserRole,boolean isDebug) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userRole = userRole;
+        this.classUserRole = classUserRole;
+        this.isDebug=isDebug;
     }
 
     public LoginOptions(int userId) {

@@ -31,10 +31,10 @@ public class LoggerUtils {
                 return isIsLoggable();
             }
 
-            @Override
-            public void log(int priority, @Nullable String tag, @NonNull String message) {
-                super.log(getLogLevel(), tag, message);
-            }
+//            @Override
+//            public void log(int priority, @Nullable String tag, @NonNull String message) {
+//                super.log(getLogLevel(), tag, message);
+//            }
         });
     }
 
