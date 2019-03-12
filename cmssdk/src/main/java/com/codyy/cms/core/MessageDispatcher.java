@@ -51,4 +51,8 @@ public class MessageDispatcher extends EventEmitter {
     public void unsubscribeMessage(String msgName) {
         this.removeListener(msgName);
     }
+
+    public void unsubscribeAll() {
+        this.clear();
+    }
 }

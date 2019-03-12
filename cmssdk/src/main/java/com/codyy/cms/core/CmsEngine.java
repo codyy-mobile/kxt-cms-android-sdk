@@ -15,6 +15,7 @@ import com.codyy.cms.utils.LoggerUtils;
 import com.orhanobut.logger.Logger;
 
 import org.jdeferred2.Deferred;
+import org.jdeferred2.DoneCallback;
 import org.jdeferred2.Promise;
 import org.jdeferred2.impl.DeferredObject;
 
@@ -255,9 +256,16 @@ public class CmsEngine {
      * @param {MessageModule} msgModule
      * @memberof CmsEngine
      */
-    public void unregisterMsgModule(MessageModule msgModule) {
-        this.getMsgDispatcher().unsubscribe(msgModule);
+    public void unregisterMsgModule(MessageModule... msgModules) {
+        for (MessageModule msgModule : msgModules) {
+            this.getMsgDispatcher().unsubscribe(msgModule);
+        }
     }
+
+    public void unregisterAllMsgModule() {
+        this.getMsgDispatcher().unsubscribeAll();
+    }
+
 
     public MessageDispatcher getMsgDispatcher() {
         return msgDispatcher;
@@ -280,16 +288,22 @@ public class CmsEngine {
      * 退出信令系统
      */
     public void logout() {
-        unregisterMsgModule(this.userMsgModule);
-        unregisterMsgModule(this.whiteboardMsgModule);
-        unregisterMsgModule(this.textchatMsgModule);
-        unregisterMsgModule(this.sysMsgModule);
-        if (msgEngine != null) {
-            msgEngine.channelLeave();
-        }
+        unregisterAllMsgModule();
         if (mRtmClient != null) {
             mRtmClient.logout(null);
         }
+//        if (msgEngine != null) {
+//            msgEngine.channelLeave().done(result -> {
+//                if (mRtmClient != null) {
+//                    mRtmClient.logout(null);
+//                }
+//            }).fail(result -> {
+//                if (mRtmClient != null) {
+//                    mRtmClient.logout(null);
+//                }
+//            });
+//        }
+
     }
 
 

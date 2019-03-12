@@ -13,6 +13,9 @@ import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.core.definition.NoChatScope;
 import com.codyy.cms.core.definition.SpeakingState;
+import com.codyy.cms.utils.GsonUtils;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -218,15 +221,12 @@ public class UserMsgModule extends AbstractMsgModule {
 //                this.notifyStateUpdated(UserStateType.IS_ONLINE, oldValue, false, user);
                 break;
             case MessageName.USER_INFO:
-                try {
-                    JSONObject object = new JSONObject((String) msg.body);
-                    user.attributes.classUserRole = object.optString("classUserRole");
-                    user.attributes.userName = object.optString("userName");
-                    this.userInfoMap.put(msg.header.userId, user);
-                    this.setClassUserRole(user);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Message<User> message = GsonUtils.json2Bean(new Gson().toJson(msg), new TypeToken<Message<User>>() {
+                }.getType());
+                user.attributes.classUserRole = message.body.attributes.classUserRole;
+                user.attributes.userName = message.body.attributes.userName;
+                this.userInfoMap.put(msg.header.userId, user);
+                this.setClassUserRole(user);
 //                User newValue = (User) CombineUtils.combineSydwCore(msg.body,user);
 //                this.notifyStateUpdated(UserStateType.USER, user, newValue);
                 break;

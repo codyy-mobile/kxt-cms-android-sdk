@@ -103,6 +103,11 @@ public class MessageEngine {
             @Override
             public void onMemberLeft(RtmChannelMember member) {
                 mChannelMemberCount.decrementAndGet();
+                Integer userId = accountMap.get(member.getUserId());
+                if (userId != null && userId >= 0) {
+                    userIdMap.remove(userId);
+                    accountMap.remove(member.getUserId());
+                }
                 refreshMemberCount();
             }
 
@@ -186,34 +191,19 @@ public class MessageEngine {
      * @param peerId
      * @param msg
      */
-    public void onMessage(String peerId, RtmMessage msg) throws CmsException {
+    void onMessage(String peerId, RtmMessage msg) throws CmsException {
         Message message = GsonUtils.json2Bean(msg.getText(), Message.class);
         message.header.rtmAccount = peerId;
-        Logger.i("[Received receiver=" + this.cmsEngine.getUserMsgModule().getMe().attributes.userId + ", msg=" + message.header.name + " ] ", GsonUtils.bean2JsonStr(message));
+        Logger.i("[Received receiver=" + this.cmsEngine.getUserMsgModule().getMe().attributes.userId + ", msg=" + message.header.name + " ] " + GsonUtils.bean2JsonStr(message));
         Integer accountUserId = accountMap.get(peerId);
-        if (accountUserId != null && (message.header.userId == accountUserId)) {
+        if (accountUserId != null && (this.cmsEngine.getUserMsgModule().getMe().attributes.userId == accountUserId)) {
             // 收到的是自己发送的广播消息，忽略。
-            Logger.w("Received message which is sent by self. ", "rtmAccount: " + peerId, "Message: " + msg.getText());
+            Logger.w("Received message which is sent by self. " + "rtmAccount: " + peerId + " Message: " + msg.getText());
             return;
         }
         validateMsg(message);
-        // 如果之前的ONLINE/OFFLINE消息没处理，则模拟生成ONLINE/OFFLINE消息分发出。
         if (MessagesRuleDef.USER_INFO.name.equals(message.header.name)) {
             this.setUserIdAccoutnMap(message.header.userId, peerId);
-            if (this.memberJoinPendingList.contains(peerId)) {
-                this.memberJoinPendingList.remove(peerId);
-
-                Message onlineMsg = (Message) CombineUtils.combineSydwCore(message, new Message());
-                onlineMsg.header.name = MessagesRuleDef.USER_ONLINE.name;
-                this.options.cmsEngine.getMsgDispatcher().dispatch(onlineMsg);
-            }
-            if (this.memberLeftPendingList.contains(peerId)) {
-                this.memberLeftPendingList.remove(peerId);
-
-                Message onlineMsg = (Message) CombineUtils.combineSydwCore(message, new Message());
-                onlineMsg.header.name = MessagesRuleDef.USER_OFFLIE.name;
-                this.options.cmsEngine.getMsgDispatcher().dispatch(onlineMsg);
-            }
         }
 
         this.options.cmsEngine.getMsgDispatcher().dispatch(message);
@@ -260,8 +250,23 @@ public class MessageEngine {
         });
     }
 
+    /**
+     * 刷新在线人数
+     */
     private void refreshMemberCount() {
-        //todo 属性人数title
+        if (memberCountListener != null) {
+            memberCountListener.refresh(mChannelMemberCount.intValue());
+        }
+    }
+
+    private MemberCountListener memberCountListener;
+
+    public void setMemberCountListener(MemberCountListener memberCountListener) {
+        this.memberCountListener = memberCountListener;
+    }
+
+    public interface MemberCountListener {
+        void refresh(int count);
     }
 
     /**
@@ -290,60 +295,6 @@ public class MessageEngine {
                     break;
             }
         });
-    }
-
-    /**
-     * 发送点对点消息
-     *
-     * @param msg 消息内容
-     *            {@link io.agora.rtm.RtmStatusCode.PeerMessageState}
-     */
-    public void sendP2PMessage(String msg) {
-        if (cmsEngine.getRtmClient() != null) {
-            RtmMessage message = RtmMessage.createMessage();
-            message.setText(msg);
-            cmsEngine.getRtmClient().sendMessageToPeer(cmsEngine.getRtmAccount(), message, state -> {
-                // See RtmStatusCode.PeerMessageState for the message states.
-                switch (state) {
-                    case RtmStatusCode.PeerMessageState.PEER_MESSAGE_SENT_TIMEOUT:
-                    case RtmStatusCode.PeerMessageState.PEER_MESSAGE_FAILURE:
-//                    showToast(getString(R.string.send_msg_failed));
-                        break;
-                    case RtmStatusCode.PeerMessageState.PEER_MESSAGE_PEER_UNREACHABLE:
-//                    showToast(getString(R.string.peer_offline));
-                        break;
-                }
-            });
-        }
-    }
-
-    /**
-     * 加入频道
-     * {@link io.agora.rtm.RtmStatusCode.JoinChannelError}
-     */
-    private void joinChannel() {
-        if (rtmChannel != null) {
-            rtmChannel.join(new IResultCallback<Void>() {
-                @Override
-                public void onSuccess(Void responseInfo) {
-                    // Join a channel succeeds.
-                    // 设置用户id和信令账号
-                    setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
-                    // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
-                    try {
-                        cmsEngine.getUserMsgModule().sendUserInfoMsg();
-                    } catch (CmsException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(ErrorInfo errorInfo) {
-                    int errorCode = errorInfo.getErrorCode();
-                    // Join a channel fails. See the error codes defined in RtmStatusCode.JoinChannelError.
-                }
-            });
-        }
     }
 
     public Promise<Integer, Throwable, Void> joinChannel2() {
@@ -381,12 +332,25 @@ public class MessageEngine {
     /**
      * 调用 RtmChannel 实例的 leave 方法可以退出该频道。退出频道之后可以调用 join 方法再重新加入频道。
      */
-    public void channelLeave() {
+    public Promise<Integer, Throwable, Void> channelLeave() {
+        Deferred<Integer, Throwable, Void> deferred = new DeferredObject<>();
         if (rtmChannel != null) {
-            rtmChannel.leave(null);
-            rtmChannel.release();
-            rtmChannel = null;
+            rtmChannel.leave(new IResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    deferred.resolve(0);
+                    rtmChannel.release();
+                    rtmChannel = null;
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    deferred.reject(new CmsException(errorInfo.getErrorCode(),"leave channel failure"));
+                }
+            });
+
         }
+        return deferred.promise();
     }
 
     /**
