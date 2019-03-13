@@ -10,7 +10,7 @@ import com.codyy.cms.core.definition.MsgSendType;
 import com.codyy.cms.events.JoinChannelEvent;
 import com.codyy.cms.events.MemberCountChangedEvent;
 import com.codyy.cms.utils.CombineUtils;
-import com.codyy.cms.utils.EbusUtil;
+import com.codyy.cms.utils.EbusUtils;
 import com.codyy.cms.utils.GsonUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
@@ -250,7 +250,7 @@ public class MessageEngine {
      * 刷新在线人数
      */
     private void refreshMemberCount() {
-        EbusUtil.post(new MemberCountChangedEvent(mChannelMemberCount.intValue()));
+        EbusUtils.post(new MemberCountChangedEvent(mChannelMemberCount.intValue()));
     }
 
     /**
@@ -287,7 +287,7 @@ public class MessageEngine {
                 @Override
                 public void onSuccess(Void responseInfo) {
                     // Join a channel succeeds.
-                    EbusUtil.post(new JoinChannelEvent(true, null));
+                    EbusUtils.post(new JoinChannelEvent(true, null));
                     // 设置用户id和信令账号
                     setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
                     // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
@@ -301,9 +301,11 @@ public class MessageEngine {
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
                     // Join a channel fails. See the error codes defined in RtmStatusCode.JoinChannelError.
-                    EbusUtil.post(new JoinChannelEvent(false, errorInfo));
+                    EbusUtils.post(new JoinChannelEvent(false, errorInfo));
                 }
             });
+        } else {
+            EbusUtils.post(new JoinChannelEvent(false, new ErrorInfo(com.codyy.cms.agora.RtmStatusCode.JoinChannelError.JOIN_CHANNEL_NULL)));
         }
     }
 
@@ -393,4 +395,9 @@ public class MessageEngine {
             throw new CmsException(CmsException.CmsErrorCode.MSG_NO_SENDTYPE, "Message sendType is not set.");
         }
     }
+
+    public CmsEngine getCmsEngine() {
+        return cmsEngine;
+    }
+
 }

@@ -1,18 +1,17 @@
 package com.codyy.cms.core.definition;
 
-public class Message<T> {
-    public MessageHeader header;
+public class Message<T> extends BaseMessage {
     public T body;
 
     public Message() {
     }
 
     public Message(MessageHeader header) {
-        this.header = header;
+        super(header);
     }
 
     public Message(MessageHeader header, T body) {
-        this.header = header;
+        super(header);
         this.body = body;
     }
 }

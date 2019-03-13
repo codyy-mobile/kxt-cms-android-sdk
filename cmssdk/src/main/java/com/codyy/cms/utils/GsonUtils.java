@@ -59,6 +59,23 @@ public class GsonUtils {
         return t;
     }
 
+    public static <T> T bean2Bean(Object o, Type type) {
+        T t;
+        try {
+            String jsonString = bean2JsonStr(o);
+            Gson gson = new GsonBuilder().registerTypeAdapterFactory(new NullStringToEmptyAdapterFactory()).create();
+//然后用上面一行写的gson来序列化和反序列化实体类type
+//            gson.fromJson(json, type);
+//            gson.toJson(type);
+//            Gson gson = new Gson();
+            t = gson.fromJson(jsonString, type);
+        } catch (Exception e) {
+            e.printStackTrace();
+            t = null;
+        }
+        return t;
+    }
+
     public static <T> List<T> json2List(String jsonString) {
         List<T> list;
         try {

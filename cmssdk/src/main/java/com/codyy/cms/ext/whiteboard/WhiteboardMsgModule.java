@@ -5,9 +5,14 @@ import com.codyy.cms.core.MessageEngine;
 import com.codyy.cms.core.MessageFactory;
 import com.codyy.cms.core.MessageModule;
 import com.codyy.cms.core.definition.Message;
-import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.MessagesRuleDef;
+import com.codyy.cms.events.whiteboard.WhiteBoardEvent;
+import com.codyy.cms.utils.EbusUtils;
+import com.codyy.cms.utils.GsonUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,35 +51,40 @@ public class WhiteboardMsgModule extends AbstractMsgModule implements MessageMod
 
     @Override
     public void handle(String msgName, Message message) {
-        switch (msgName) {
-            case MessageName.WHITEBOARD_FREE_OPERATION:
-                break;
-            case MessageName.WHITEBOARD_CREATE_BOARD:
-                break;
-            case MessageName.WHITEBOARD_DELETE_BOARD:
-                break;
-            case MessageName.WHITEBOARD_SELECT_BOARD:
-                break;
-            case MessageName.WHITEBOARD_SCROLL_BOARD:
-                break;
-            case MessageName.WHITEBOARD_SWITCH_PAGE:
-                break;
-            case MessageName.WHITEBOARD_SELECT_BRUSH:
-                break;
-            case MessageName.WHITEBOARD_POINTER_MOVE:
-                break;
-            case MessageName.WHITEBOARD_FREE_DRAWING:
-                break;
-            case MessageName.WHITEBOARD_DRAW_TEXT:
-                break;
-            case MessageName.WHITEBOARD_DRAW_SHAPE:
-                break;
-            case MessageName.WHITEBOARD_ERASE_OBJECT:
-                break;
-            case MessageName.WHITEBOARD_UNDO_REDO:
-                break;
-            case MessageName.WHITEBOARD_CLEAR_ALL:
-                break;
+        try {
+            EbusUtils.post(new WhiteBoardEvent(new JSONObject(GsonUtils.bean2JsonStr(message.body))));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+//        switch (msgName) {
+//            case MessageName.WHITEBOARD_FREE_OPERATION:
+//                break;
+//            case MessageName.WHITEBOARD_CREATE_BOARD:
+//                break;
+//            case MessageName.WHITEBOARD_DELETE_BOARD:
+//                break;
+//            case MessageName.WHITEBOARD_SELECT_BOARD:
+//                break;
+//            case MessageName.WHITEBOARD_SCROLL_BOARD:
+//                break;
+//            case MessageName.WHITEBOARD_SWITCH_PAGE:
+//                break;
+//            case MessageName.WHITEBOARD_SELECT_BRUSH:
+//                break;
+//            case MessageName.WHITEBOARD_POINTER_MOVE:
+//                break;
+//            case MessageName.WHITEBOARD_FREE_DRAWING:
+//                break;
+//            case MessageName.WHITEBOARD_DRAW_TEXT:
+//                break;
+//            case MessageName.WHITEBOARD_DRAW_SHAPE:
+//                break;
+//            case MessageName.WHITEBOARD_ERASE_OBJECT:
+//                break;
+//            case MessageName.WHITEBOARD_UNDO_REDO:
+//                break;
+//            case MessageName.WHITEBOARD_CLEAR_ALL:
+//                break;
+//        }
     }
 }

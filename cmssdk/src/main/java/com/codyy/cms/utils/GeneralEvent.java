@@ -2,7 +2,7 @@ package com.codyy.cms.utils;
 
 import com.codyy.cms.agora.ErrorCode;
 
-
+@Deprecated
 public class GeneralEvent {
     public static String getEventString(int code) {
         String msg;

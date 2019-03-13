@@ -16,7 +16,7 @@ import com.codyy.cms.ext.textchat.TextchatMsgModule;
 import com.codyy.cms.ext.user.User;
 import com.codyy.cms.ext.user.UserMsgModule;
 import com.codyy.cms.ext.whiteboard.WhiteboardMsgModule;
-import com.codyy.cms.utils.EbusUtil;
+import com.codyy.cms.utils.EbusUtils;
 import com.orhanobut.logger.Logger;
 
 import java.lang.ref.WeakReference;
@@ -131,7 +131,7 @@ public class CmsEngine {
     private RtmClientListener mRtmClientListener = new RtmClientListener() {
         @Override
         public void onConnectionStateChanged(int state, int reason) {
-            EbusUtil.post(new ConnectionStateChangedEvent(state, reason));
+            EbusUtils.post(new ConnectionStateChangedEvent(state, reason));
         }
 
         @Override
@@ -163,7 +163,7 @@ public class CmsEngine {
                 @Override
                 public void onSuccess(Void responseInfo) {
                     // Login succeeds.
-                    EbusUtil.post(new LoginEvent(true, null));
+                    EbusUtils.post(new LoginEvent(true, null));
                     msgEngine = new MessageEngine(getInstance(), generateChannelId(), new MsgEngineOpts(getInstance(), mRtmClient, liveClassId, loginOptions.getUserId()));
                     msgDispatcher = new MessageDispatcher();
                     msgFactory = new MessageFactory();
@@ -173,7 +173,7 @@ public class CmsEngine {
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    EbusUtil.post(new LoginEvent(false, errorInfo));
+                    EbusUtils.post(new LoginEvent(false, errorInfo));
                 }
             });
         } catch (Exception e) {
@@ -212,7 +212,7 @@ public class CmsEngine {
      * @returns {UserMsgModule}
      * @memberof CmsEngine
      */
-    UserMsgModule getUserMsgModule() {
+   public UserMsgModule getUserMsgModule() {
         return this.userMsgModule;
     }
 
@@ -324,4 +324,5 @@ public class CmsEngine {
     public RtmClient getRtmClient() {
         return mRtmClient;
     }
+
 }

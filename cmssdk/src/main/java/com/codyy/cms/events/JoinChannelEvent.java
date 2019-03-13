@@ -29,6 +29,9 @@ public class JoinChannelEvent extends BaseEvent {
             case RtmStatusCode.JoinChannelError.JOIN_CHANNEL_TIMEOUT:
                 msg = "加入组超时。目前的超时设置为4秒。";
                 break;
+            case RtmStatusCode.JoinChannelError.JOIN_CHANNEL_NULL:
+                msg = "SDK 返回 null 。原因可能是 channelId 无效，该 channelId 已存在，或频道数量超过限制。";
+                break;
             default:
                 msg = "其他";
                 break;

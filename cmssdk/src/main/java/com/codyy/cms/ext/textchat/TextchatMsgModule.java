@@ -8,6 +8,13 @@ import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.MessagesRuleDef;
+import com.codyy.cms.events.cls.SharingDesktopEvent;
+import com.codyy.cms.events.textchat.TextChatDelMsgEvent;
+import com.codyy.cms.events.textchat.TextChatEnabledEvent;
+import com.codyy.cms.events.textchat.TextChatMsgEvent;
+import com.codyy.cms.utils.EbusUtils;
+import com.codyy.cms.utils.GsonUtils;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,10 +49,27 @@ public class TextchatMsgModule extends AbstractMsgModule implements MessageModul
     public void handle(String msgName, Message message) {
         switch (msgName) {
             case MessageName.TEXTCHAT_DISABLE_CHAT:
+                Message<TextChatEnabledEvent> disabledEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<TextChatEnabledEvent>>() {
+                }.getType());
+                disabledEventMessage.body.setEnabled(false);
+                EbusUtils.post(disabledEventMessage.body);
                 break;
             case MessageName.TEXTCHAT_ENABLE_CHAT:
+                Message<TextChatEnabledEvent> enabledEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<TextChatEnabledEvent>>() {
+                }.getType());
+                enabledEventMessage.body.setEnabled(true);
+                EbusUtils.post(enabledEventMessage.body);
                 break;
             case MessageName.TEXTCHAT_SEND_MSG:
+                Message<TextChatMsgEvent> textChatMsgEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<TextChatMsgEvent>>() {
+                }.getType());
+                textChatMsgEventMessage.body.setMsgId(message.header.id);
+                EbusUtils.post(textChatMsgEventMessage.body);
+                break;
+            case MessageName.TEXTCHAT_DELETE_MSG:
+                Message<TextChatDelMsgEvent> textChatDelMsgEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<TextChatDelMsgEvent>>() {
+                }.getType());
+                EbusUtils.post(textChatDelMsgEventMessage.body);
                 break;
             case MessageName.TEXTCHAT_ASK_QUESTION:
                 break;

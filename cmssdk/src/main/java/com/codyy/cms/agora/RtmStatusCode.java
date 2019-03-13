@@ -27,6 +27,7 @@ public interface RtmStatusCode {
         int JOIN_CHANNEL_ERR_REJECTED = 2;
         int JOIN_CHANNEL_ERR_INVALID_ARGUMENT = 3;
         int JOIN_CHANNEL_TIMEOUT = 4;
+        int JOIN_CHANNEL_NULL = 5;
     }
 
     interface PeerMessageState {

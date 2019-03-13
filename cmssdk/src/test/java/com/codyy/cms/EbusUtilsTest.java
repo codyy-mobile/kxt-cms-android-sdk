@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class CmsTest {
+public class EbusUtilsTest {
     @Test
     public void addition_isCorrect() {
     }

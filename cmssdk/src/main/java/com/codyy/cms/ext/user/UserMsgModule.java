@@ -220,7 +220,7 @@ public class UserMsgModule extends AbstractMsgModule {
 //                this.notifyStateUpdated(UserStateType.IS_ONLINE, oldValue, false, user);
                 break;
             case MessageName.USER_INFO:
-                Message<User> message = GsonUtils.json2Bean(new Gson().toJson(msg), new TypeToken<Message<User>>() {
+                Message<User> message = GsonUtils.bean2Bean(msg, new TypeToken<Message<User>>() {
                 }.getType());
                 user.attributes.classUserRole = message.body.attributes.classUserRole;
                 user.attributes.userName = message.body.attributes.userName;
