@@ -7,14 +7,13 @@ import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageHeader;
 import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.core.definition.MsgSendType;
+import com.codyy.cms.events.JoinChannelEvent;
+import com.codyy.cms.events.MemberCountChangedEvent;
 import com.codyy.cms.utils.CombineUtils;
+import com.codyy.cms.utils.EbusUtil;
 import com.codyy.cms.utils.GsonUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
-
-import org.jdeferred2.Deferred;
-import org.jdeferred2.Promise;
-import org.jdeferred2.impl.DeferredObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,8 +29,6 @@ import io.agora.rtm.RtmChannelListener;
 import io.agora.rtm.RtmChannelMember;
 import io.agora.rtm.RtmMessage;
 import io.agora.rtm.RtmStatusCode;
-
-import static com.codyy.cms.agora.RtmStatusCode.JoinChannelError.JOIN_CHANNEL_ERR_OK;
 
 public class MessageEngine {
     private CmsEngine cmsEngine;
@@ -128,7 +125,6 @@ public class MessageEngine {
      *
      * @param {Message} message
      * @throws {CmsException}
-     * @returns {Promise<MessageResult>}
      * @memberof MessageEngine
      */
     public void sendMessage(Message message) throws CmsException {
@@ -254,19 +250,7 @@ public class MessageEngine {
      * 刷新在线人数
      */
     private void refreshMemberCount() {
-        if (memberCountListener != null) {
-            memberCountListener.refresh(mChannelMemberCount.intValue());
-        }
-    }
-
-    private MemberCountListener memberCountListener;
-
-    public void setMemberCountListener(MemberCountListener memberCountListener) {
-        this.memberCountListener = memberCountListener;
-    }
-
-    public interface MemberCountListener {
-        void refresh(int count);
+        EbusUtil.post(new MemberCountChangedEvent(mChannelMemberCount.intValue()));
     }
 
     /**
@@ -297,13 +281,13 @@ public class MessageEngine {
         });
     }
 
-    public Promise<Integer, Throwable, Void> joinChannel2() {
-        Deferred<Integer, Throwable, Void> deferred = new DeferredObject<>();
+    void joinChannel() {
         if (rtmChannel != null) {
             rtmChannel.join(new IResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void responseInfo) {
                     // Join a channel succeeds.
+                    EbusUtil.post(new JoinChannelEvent(true, null));
                     // 设置用户id和信令账号
                     setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
                     // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
@@ -311,46 +295,37 @@ public class MessageEngine {
                         cmsEngine.getUserMsgModule().sendUserInfoMsg();
                     } catch (CmsException e) {
                         e.printStackTrace();
-                        deferred.reject(e);
-                    } finally {
-                        deferred.resolve(JOIN_CHANNEL_ERR_OK);
                     }
                 }
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    int errorCode = errorInfo.getErrorCode();
-                    deferred.reject(new CmsException(errorCode, ""));
                     // Join a channel fails. See the error codes defined in RtmStatusCode.JoinChannelError.
+                    EbusUtil.post(new JoinChannelEvent(false, errorInfo));
                 }
             });
         }
-        return deferred.promise();
     }
 
 
     /**
      * 调用 RtmChannel 实例的 leave 方法可以退出该频道。退出频道之后可以调用 join 方法再重新加入频道。
      */
-    public Promise<Integer, Throwable, Void> channelLeave() {
-        Deferred<Integer, Throwable, Void> deferred = new DeferredObject<>();
+    public void channelLeave() {
         if (rtmChannel != null) {
             rtmChannel.leave(new IResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    deferred.resolve(0);
                     rtmChannel.release();
                     rtmChannel = null;
                 }
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    deferred.reject(new CmsException(errorInfo.getErrorCode(),"leave channel failure"));
                 }
             });
 
         }
-        return deferred.promise();
     }
 
     /**

@@ -3,4 +3,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application>
+        <provider
+            android:name=".provider.CmsInitProvider"
+            android:authorities="${applicationId}.cmsinitprovider"
+            android:exported="false"
+            android:initOrder="102" />
+    </application>
 </manifest>

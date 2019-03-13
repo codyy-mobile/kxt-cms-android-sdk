@@ -1,6 +1,5 @@
 package com.codyy.cms.core;
 
-import com.codyy.cms.agora.RtmStatusCode;
 public class CmsEngineOpts {
 
     /**
@@ -23,15 +22,7 @@ public class CmsEngineOpts {
      * 用户在信令系统中的有效时间
      */
     private int tokenLifeTime;
-    private CmsListener cmsListener;
 
-    public void setCmsListener(CmsListener cmsListener) {
-        this.cmsListener = cmsListener;
-    }
-
-    public CmsListener getCmsListener() {
-        return cmsListener;
-    }
 
     public CmsEngineOpts() {
     }
@@ -40,21 +31,12 @@ public class CmsEngineOpts {
         this.appId = appId;
     }
 
-    public CmsEngineOpts(String appId, CmsListener cmsListener) {
-        this.appId = appId;
-        setCmsListener(cmsListener);
-    }
 
     public CmsEngineOpts(String appId, String appCertificate) {
         this.appId = appId;
         this.appCertificate = appCertificate;
     }
 
-    public CmsEngineOpts(String appId, String appCertificate, CmsListener cmsListener) {
-        this.appId = appId;
-        this.appCertificate = appCertificate;
-        setCmsListener(cmsListener);
-    }
 
 
     public CmsEngineOpts(String appId, String appCertificate, int reconnectCount) {
@@ -63,20 +45,7 @@ public class CmsEngineOpts {
         this.reconnectCount = reconnectCount;
     }
 
-    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, CmsListener cmsListener) {
-        this.appId = appId;
-        this.appCertificate = appCertificate;
-        this.reconnectCount = reconnectCount;
-        setCmsListener(cmsListener);
-    }
 
-    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime, CmsListener cmsListener) {
-        this.appId = appId;
-        this.appCertificate = appCertificate;
-        this.reconnectCount = reconnectCount;
-        this.reconnectTime = reconnectTime;
-        setCmsListener(cmsListener);
-    }
 
     public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime) {
         this.appId = appId;
@@ -93,14 +62,6 @@ public class CmsEngineOpts {
         this.tokenLifeTime = tokenLifeTime;
     }
 
-    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime, int tokenLifeTime, CmsListener cmsListener) {
-        this.appId = appId;
-        this.appCertificate = appCertificate;
-        this.reconnectCount = reconnectCount;
-        this.reconnectTime = reconnectTime;
-        this.tokenLifeTime = tokenLifeTime;
-        setCmsListener(cmsListener);
-    }
 
     public String getAppId() {
         return appId;
@@ -142,12 +103,4 @@ public class CmsEngineOpts {
         this.tokenLifeTime = tokenLifeTime;
     }
 
-    public interface CmsListener {
-        /**
-         *
-         * @param newState {@link RtmStatusCode.ConnectionState}
-         * @param reason {@link RtmStatusCode.ConnectionChangeReason}
-         */
-        void onStateChanged(int newState, int reason);
-    }
 }

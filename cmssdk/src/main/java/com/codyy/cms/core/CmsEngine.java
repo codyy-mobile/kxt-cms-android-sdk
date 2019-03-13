@@ -1,37 +1,37 @@
 package com.codyy.cms.core;
 
+import android.app.Application;
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.annotation.RestrictTo;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.codyy.cms.agora.SignalingToken;
+import com.codyy.cms.events.ConnectionStateChangedEvent;
+import com.codyy.cms.events.LoginEvent;
 import com.codyy.cms.ext.cls.ClassMsgModule;
 import com.codyy.cms.ext.sys.SysMsgModule;
 import com.codyy.cms.ext.textchat.TextchatMsgModule;
 import com.codyy.cms.ext.user.User;
 import com.codyy.cms.ext.user.UserMsgModule;
 import com.codyy.cms.ext.whiteboard.WhiteboardMsgModule;
-import com.codyy.cms.utils.LoggerUtils;
+import com.codyy.cms.utils.EbusUtil;
 import com.orhanobut.logger.Logger;
 
-import org.jdeferred2.Deferred;
-import org.jdeferred2.DoneCallback;
-import org.jdeferred2.Promise;
-import org.jdeferred2.impl.DeferredObject;
+import java.lang.ref.WeakReference;
 
 import io.agora.rtm.ErrorInfo;
 import io.agora.rtm.IResultCallback;
 import io.agora.rtm.RtmClient;
 import io.agora.rtm.RtmClientListener;
 import io.agora.rtm.RtmMessage;
-import io.agora.rtm.RtmStatusCode;
 
 /**
  * Account: User-[liveclassID]-[userId]@codyy.com
  * ChannelId: Channel-[liveclassId]@codyy.com
  */
 public class CmsEngine {
-    private static final String TAG = "CMS_LOGGER";
     /**
      * RtmClient 支持多实例，每个实例独立工作互不干扰，多个实例创建时可以用相同的 context，但是事件回调 RtmClientListener 必须是不同的实例。
      * 当 RtmClient 实例不再使用的时候，可以调用实例的 destroy 方法进行销毁释放资源。
@@ -61,7 +61,7 @@ public class CmsEngine {
      * @memberof CmsEngine
      */
     private MessageDispatcher msgDispatcher;
-
+    private WeakReference<Context> contextWeakReference;
     /**
      * 负责创建消息
      *
@@ -75,27 +75,39 @@ public class CmsEngine {
     private SysMsgModule sysMsgModule;
     private TextchatMsgModule textchatMsgModule;
     private WhiteboardMsgModule whiteboardMsgModule;
+    private static Application application;
 
     public static CmsEngine getInstance() {
         if (cmsEngineInstance == null) {
             synchronized (CmsEngine.class) {
                 if (cmsEngineInstance == null) {
                     cmsEngineInstance = new CmsEngine();
-                    LoggerUtils.initLogger(TAG);
                 }
             }
         }
         return cmsEngineInstance;
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
+    public static void install(@Nullable Context context) {
+        if (context == null) {
+            Logger.e("Install failed: context is null!");
+        } else {
+            application = (Application) context.getApplicationContext();
+            getInstance();
+        }
+    }
+
     /**
      * 实例化cms engine
      *
-     * @param context application context
-     * @param opts    配置信息
+     * @param opts 配置信息
      */
-    public void init(Context context, CmsEngineOpts opts, int liveClassId) {
+    public void init(CmsEngineOpts opts, int liveClassId) {
         try {
+            if (application == null) {
+                throw new NullPointerException("Init failed:context is null");
+            }
             if (opts == null) {
                 throw new NullPointerException("CmsEngineOpts is null");
             }
@@ -107,7 +119,8 @@ public class CmsEngine {
             }
             this.options = opts;
             this.liveClassId = liveClassId;
-            mRtmClient = RtmClient.createInstance(context, opts.getAppId(), mRtmClientListener);
+            if (mRtmClient != null) return;
+            mRtmClient = RtmClient.createInstance(application, opts.getAppId(), mRtmClientListener);
             setLogLevel(0);
         } catch (Exception e) {
             Logger.e(Log.getStackTraceString(e));
@@ -118,9 +131,7 @@ public class CmsEngine {
     private RtmClientListener mRtmClientListener = new RtmClientListener() {
         @Override
         public void onConnectionStateChanged(int state, int reason) {
-            if (options.getCmsListener() != null) {
-                options.getCmsListener().onStateChanged(state, reason);
-            }
+            EbusUtil.post(new ConnectionStateChangedEvent(state, reason));
         }
 
         @Override
@@ -139,40 +150,9 @@ public class CmsEngine {
 
     /**
      * 登录信令系统
-     * 在登录前,必须先实例化 {@link CmsEngine#init(Context, CmsEngineOpts, int)}
+     * 在登录前,必须先实例化 {@link CmsEngine#init(CmsEngineOpts, int)}
      */
-    @Deprecated
     public void login(LoginOptions loginOptions) {
-        if (mRtmClient == null)
-            throw new NullPointerException("When use login method ,RtmClient can not be null");
-        this.rtmAccount = this.generateRtmAccount(loginOptions.getUserId());
-        // 登录 Agora 信令系统
-        try {
-            mRtmClient.login(SignalingToken.getOneDayToken(options.getAppId(), options.getAppCertificate(), rtmAccount), rtmAccount, new IResultCallback<Void>() {
-                @Override
-                public void onSuccess(Void responseInfo) {
-                    // Login succeeds.
-                    msgEngine = new MessageEngine(getInstance(), generateChannelId(), new MsgEngineOpts(getInstance(), mRtmClient, liveClassId, loginOptions.getUserId()));
-                    msgDispatcher = new MessageDispatcher();
-                    msgFactory = new MessageFactory();
-                    initMsgModules(loginOptions, msgFactory);
-                }
-
-                @Override
-                public void onFailure(ErrorInfo errorInfo) {
-                    int errorCode = errorInfo.getErrorCode();
-                    // Login fails. See the error codes defined in RtmStatusCode.LoginError.
-//                    Logger.e(GeneralEvent.getEventString(errorCode));
-                }
-            });
-        } catch (Exception e) {
-            Logger.e(Log.getStackTraceString(e));
-            throw new RuntimeException("SignalingToken error\n" + Log.getStackTraceString(e));
-        }
-    }
-
-    public Promise<String, Throwable, Void> login2(LoginOptions loginOptions) {
-        Deferred<String, Throwable, Void> deferred = new DeferredObject<>();
         if (mRtmClient == null) {
             throw new NullPointerException("When use login method ,RtmClient can not be null");
         }
@@ -183,27 +163,23 @@ public class CmsEngine {
                 @Override
                 public void onSuccess(Void responseInfo) {
                     // Login succeeds.
+                    EbusUtil.post(new LoginEvent(true, null));
                     msgEngine = new MessageEngine(getInstance(), generateChannelId(), new MsgEngineOpts(getInstance(), mRtmClient, liveClassId, loginOptions.getUserId()));
                     msgDispatcher = new MessageDispatcher();
                     msgFactory = new MessageFactory();
                     initMsgModules(loginOptions, msgFactory);
-                    deferred.resolve(rtmAccount);
+                    msgEngine.joinChannel();
                 }
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                    int errorCode = errorInfo.getErrorCode();
-                    deferred.reject(new CmsException(errorCode, ""));
-                    // Login fails. See the error codes defined in RtmStatusCode.LoginError.
-//                    Logger.e(GeneralEvent.getEventString(errorCode));
+                    EbusUtil.post(new LoginEvent(false, errorInfo));
                 }
             });
         } catch (Exception e) {
-            deferred.reject(e);
             Logger.e(Log.getStackTraceString(e));
             throw new RuntimeException("SignalingToken error\n" + Log.getStackTraceString(e));
         }
-        return deferred.promise();
     }
 
     /**
@@ -290,7 +266,17 @@ public class CmsEngine {
     public void logout() {
         unregisterAllMsgModule();
         if (mRtmClient != null) {
-            mRtmClient.logout(null);
+            mRtmClient.logout(new IResultCallback<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    mRtmClient = null;
+                }
+
+                @Override
+                public void onFailure(ErrorInfo errorInfo) {
+                    mRtmClient = null;
+                }
+            });
         }
 //        if (msgEngine != null) {
 //            msgEngine.channelLeave().done(result -> {
@@ -328,7 +314,11 @@ public class CmsEngine {
      */
     public void setLogLevel(int logLevel) {
 //        LoggerUtils.setLogLevel(logLevel);
-        mRtmClient.setLogFilter(logLevel);
+        if (mRtmClient == null) {
+            Logger.e("First,you must init RtmClient before set log filter ");
+        } else {
+            mRtmClient.setLogFilter(logLevel);
+        }
     }
 
     public RtmClient getRtmClient() {

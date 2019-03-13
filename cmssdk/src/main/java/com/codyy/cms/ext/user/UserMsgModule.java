@@ -184,7 +184,6 @@ public class UserMsgModule extends AbstractMsgModule {
      * 广播发送用户信息
      * Call by anyone.
      *
-     * @returns {Promise<MessageResult>}
      * @memberof UserMsgModule
      */
     public void sendUserInfoMsg() throws CmsException {
