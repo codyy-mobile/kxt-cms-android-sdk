@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by xiaojian on 2016/4/20.
+ * Created by lijian on 2016/4/20.
  */
 public class GsonUtils {
     public static <T> T json2Bean(String jsonString, Class<T> cls) {

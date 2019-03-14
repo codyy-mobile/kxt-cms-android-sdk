@@ -2,11 +2,11 @@ package com.codyy.cms.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
 import com.codyy.cms.CmsManager;
-import com.codyy.cms.core.CmsEngine;
 import com.codyy.cms.core.CmsEngineOpts;
 import com.codyy.cms.core.LoginOptions;
 import com.codyy.cms.core.definition.ClassUserRole;
@@ -36,7 +36,6 @@ import com.codyy.cms.events.textchat.TextChatDelMsgEvent;
 import com.codyy.cms.events.textchat.TextChatEnabledEvent;
 import com.codyy.cms.events.textchat.TextChatMsgEvent;
 import com.codyy.cms.events.whiteboard.WhiteBoardEvent;
-import com.codyy.cms.utils.EbusUtils;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         CmsManager.register(this);
         editText = findViewById(R.id.userId);
         CmsManager.init(new CmsEngineOpts("6ddb8bc251564e95af743486e76dc40e", ""), 1);
+        Log.e("Create",System.currentTimeMillis()+"");
     }
 
     @Override

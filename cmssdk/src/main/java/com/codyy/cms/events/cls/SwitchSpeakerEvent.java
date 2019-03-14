@@ -1,8 +1,5 @@
 package com.codyy.cms.events.cls;
 
-import android.support.annotation.RestrictTo;
-
-@RestrictTo(RestrictTo.Scope.LIBRARY)
 public class SwitchSpeakerEvent extends SelectSpeakerEvent{
     private int oldUserId;
 

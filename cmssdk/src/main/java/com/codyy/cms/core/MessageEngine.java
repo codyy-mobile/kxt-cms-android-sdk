@@ -291,11 +291,7 @@ public class MessageEngine {
                     // 设置用户id和信令账号
                     setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
                     // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
-                    try {
                         cmsEngine.getUserMsgModule().sendUserInfoMsg();
-                    } catch (CmsException e) {
-                        e.printStackTrace();
-                    }
                 }
 
                 @Override

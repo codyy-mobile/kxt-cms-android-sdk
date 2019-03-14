@@ -3,7 +3,6 @@ package com.codyy.cms.ext.user;
 import android.util.SparseArray;
 
 import com.codyy.cms.core.AbstractMsgModule;
-import com.codyy.cms.core.CmsException;
 import com.codyy.cms.core.LoginOptions;
 import com.codyy.cms.core.MessageEngine;
 import com.codyy.cms.core.MessageFactory;
@@ -14,7 +13,6 @@ import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.core.definition.NoChatScope;
 import com.codyy.cms.core.definition.SpeakingState;
 import com.codyy.cms.utils.GsonUtils;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
@@ -186,7 +184,7 @@ public class UserMsgModule extends AbstractMsgModule {
      *
      * @memberof UserMsgModule
      */
-    public void sendUserInfoMsg() throws CmsException {
+    public void sendUserInfoMsg() {
         this.sendMessage(this.getMessageFactory().createSendUserInfoMsg(this.getMe()));
     }
 

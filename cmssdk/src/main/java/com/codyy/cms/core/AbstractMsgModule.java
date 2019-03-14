@@ -10,12 +10,8 @@ public abstract class AbstractMsgModule extends EventEmitter implements MessageM
     public AbstractMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {
         this.messageEngine = messageEngine;
         this.messageFactory = messageFactory;
-        this.init();
     }
 
-    protected void init() {
-        this.load();
-    }
 
     public MessageEngine getMessageEngine() {
         return messageEngine;
@@ -25,26 +21,16 @@ public abstract class AbstractMsgModule extends EventEmitter implements MessageM
         return messageFactory;
     }
 
-    public void sendMessage(Message message) throws CmsException {
-        this.messageEngine.sendMessage(message);
+    public void sendMessage(Message message) {
+        try {
+            if (message != null) {
+                this.messageEngine.sendMessage(message);
+            } else {
+                throw new NullPointerException("send message can not be null");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public void load() {
-
-    }
-
-    @Override
-    public void save() {
-
-    }
-
-    /**
-     * 销毁对象释放资源
-     *
-     * @memberof AbstractMsgModule
-     */
-    void destory() {
-        this.save();
-    }
 }

@@ -8,7 +8,6 @@ import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.MessagesRuleDef;
-import com.codyy.cms.events.cls.SharingDesktopEvent;
 import com.codyy.cms.events.textchat.TextChatDelMsgEvent;
 import com.codyy.cms.events.textchat.TextChatEnabledEvent;
 import com.codyy.cms.events.textchat.TextChatMsgEvent;
@@ -44,7 +43,12 @@ public class TextchatMsgModule extends AbstractMsgModule implements MessageModul
     public ArrayList<String> getWatchMsgNames() {
         return new ArrayList<>(Arrays.asList(watchMsgNames));
     }
-
+    /**
+     * 讨论消息
+     */
+    public void sendChatMsg(String msg) {
+        sendMessage(this.getMessageFactory().createChatMsg(msg));
+    }
     @Override
     public void handle(String msgName, Message message) {
         switch (msgName) {

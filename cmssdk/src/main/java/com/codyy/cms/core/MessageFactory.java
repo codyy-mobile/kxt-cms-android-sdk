@@ -1,10 +1,18 @@
 package com.codyy.cms.core;
 
+import com.codyy.cms.core.definition.AppActive;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageHeader;
 import com.codyy.cms.core.definition.MessagesRuleDef;
+import com.codyy.cms.events.sys.Screenshot;
+import com.codyy.cms.events.sys.SwitchApp;
+import com.codyy.cms.events.textchat.TextChatMsg;
 import com.codyy.cms.ext.user.User;
 import com.codyy.cms.ext.user.UserMsgModule;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -57,9 +65,11 @@ public class MessageFactory {
     private User getUser(int userId) {
         return this.userMsgModule.getUserInfo(userId);
     }
-    private User getDefaultUser()  {
+
+    private User getDefaultUser() {
         return this.userMsgModule.getUserInfo(this.getUserId());
     }
+
     public MessageHeader createMessageHeader(MessagesRuleDef msgRuleDef, int userId) {
         MessageHeader header = new MessageHeader();
         header.name = msgRuleDef.name;
@@ -80,8 +90,141 @@ public class MessageFactory {
         return this.createMessageHeader(msgRuleDef, userId);
     }
 
+    /*start->userMsg*******************************************************************************/
     public Message createSendUserInfoMsg(User user) {
         return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.USER_INFO), user);
     }
+
+    /*end->userMsg*********************************************************************************/
+    /*start->class*********************************************************************************/
+
+    /**
+     * 名称：签到
+     * name：class_signin(学员端发起)
+     * <p>
+     * 功能：学员点击签到按钮并通过信令消息通知教师和服务端匿名管理用户
+     * <p>
+     * 发送类型：CP2M（Student to Teacher & Assistant & Anonymouse_Admin）
+     * <p>
+     * Request：No body
+     * <p>
+     * Response: N/A
+     *
+     * @return
+     */
+    public Message createSignInMsg() {
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_SIGNIN));
+    }
+
+    /**
+     * 名称：举手
+     * name：class_hand_up（非老师发起)
+     * <p>
+     * 功能：学员点击请求发言按钮并通过信令消息通知教师
+     * <p>
+     * 发送类型：CP2M（No teacher to Teacher & Assistant & Anonymouse_Admin）
+     *
+     * @return
+     */
+    public Message createHandUpMsg() {
+        try {
+            return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_HAND_UP), new JSONObject().put("classUserRole", this.getDefaultClassUserRole()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 名称：取消举手
+     * 消息名称：class_cancel_hand_up(非老师发起)
+     * <p>
+     * 功能：通过信令消息通知教师
+     * <p>
+     * 发送类型：CP2M（No teacher to Teacher & Assistant & Anonymouse_Admin）
+     * <p>
+     * Request：No body
+     * <p>
+     * Response: N/A
+     *
+     * @return
+     */
+    public Message createCancelHandUpMsg() {
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_CANCEL_HAND_UP));
+    }
+
+    /**
+     * 名称：结束发言
+     * 消息名称：class_end_speaking(教师端或学生自己发起)
+     * <p>
+     * 功能：教师终止某个学生发言或发言学生自己终止
+     * <p>
+     * 发送类型：CP2A（Teacher/Student to All）
+     *
+     * @return
+     */
+    public Message createEndSpeakerMsg() {
+        User user = this.getDefaultUser();
+        try {
+            return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_END_SPEAKING), new JSONObject().put("userId", user.attributes.userId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /*end->class***********************************************************************************/
+    /*start->textchat******************************************************************************/
+
+    /**
+     * 名称：发送文字消息
+     * 消息名称：textchat_send_msg(任何人发起)
+     * <p>
+     * 功能：通过信令消息通知所有人
+     * <p>
+     * 发送类型：CP2A（Anyone to All）
+     */
+    public Message createChatMsg(String msg) {
+        User user = this.getDefaultUser();
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.TEXTCHAT_SEND_MSG), new TextChatMsg(user.attributes.classUserRole, user.attributes.userName, msg));
+    }
+    /*end->textchat********************************************************************************/
+    /*start->sys***********************************************************************************/
+
+    /**
+     * 名称：截屏图片地址
+     * 消息名称：sys_capture_screen_url(学员发起)
+     * <p>
+     * 功能：通过信令消息通知所有人
+     * <p>
+     * 发送类型：CP2P（Student to 发送者）
+     *
+     * @param originalMsgId
+     * @param imageUrl
+     * @return
+     */
+    public Message createCaptureScreenUrlMsg(String originalMsgId, String imageUrl) {
+        User user = this.getDefaultUser();
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_CAPTURE_SCREEN_URL), new Screenshot(originalMsgId, imageUrl, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+    }
+
+    /**
+     * 名称：通知应用程序切换
+     * 消息名称：sys_switch_app(学员发起)
+     * <p>
+     * 功能：当学员把小阔客户端或app切换到后台运行时或从后台切换到前台时，通过信令消息通知教师和管理员
+     * <p>
+     * 发送类型：CP2M（Student to Teacher & Assistant & Anonymouse_Admin）
+     *
+     * @param action
+     * @param activeDuration
+     * @param inactiveDuration
+     * @return
+     */
+    public Message createSwitchAppMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
+        User user = this.getDefaultUser();
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_SWITCH_APP), new SwitchApp(action, activeDuration, inactiveDuration, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+    }
+    /*end->sys***********************************************************************************/
 
 }

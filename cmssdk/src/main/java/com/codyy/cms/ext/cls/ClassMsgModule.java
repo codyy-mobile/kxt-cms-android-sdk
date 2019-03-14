@@ -73,6 +73,33 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
         return new ArrayList<>(Arrays.asList(watchMsgNames));
     }
 
+    /**
+     * 点名-签到
+     */
+    public void sendSignInMsg() {
+        sendMessage(getMessageFactory().createSignInMsg());
+    }
+
+    /**
+     * 举手发言
+     */
+    public void sendHandingUpMsg() {
+        sendMessage(getMessageFactory().createHandUpMsg());
+    }
+
+    /**
+     * 取消举手
+     */
+    public void sendCancelHandingUpMsg() {
+        sendMessage(getMessageFactory().createCancelHandUpMsg());
+    }
+    /**
+     * 结束发言
+     */
+    public void sendEndSpeakingMsg() {
+        sendMessage(getMessageFactory().createEndSpeakerMsg());
+    }
+
     @Override
     public void handle(String msgName, Message message) {
         switch (msgName) {
@@ -157,9 +184,8 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                 }.getType());
                 EbusUtils.post(endTestCardEventMessage.body);
                 break;
-            case MessageName.CLASS_TESTCARD_RESULT:
-                // TODO: 2019/3/13 学生端是否接收，待确认
-                break;
+//            case MessageName.CLASS_TESTCARD_RESULT:
+//                break;
             case MessageName.CLASS_START_SHARING_DESKTOP:
                 Message<SharingDesktopEvent> sharingDesktopEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<SharingDesktopEvent>>() {
                 }.getType());

@@ -1,6 +1,5 @@
 package com.codyy.cms.utils;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -13,10 +12,6 @@ public class LoggerUtils {
      * true:打印日志;false:关闭日志
      */
     private static boolean isLoggable = true;
-    /**
-     * 日志打印级别
-     */
-    private static int logLevel = Logger.DEBUG;
 
     /**
      * @param tag global tag for every log.
@@ -31,10 +26,6 @@ public class LoggerUtils {
                 return isIsLoggable();
             }
 
-//            @Override
-//            public void log(int priority, @Nullable String tag, @NonNull String message) {
-//                super.log(getLogLevel(), tag, message);
-//            }
         });
     }
 
@@ -46,11 +37,4 @@ public class LoggerUtils {
         LoggerUtils.isLoggable = isLoggable;
     }
 
-    private static int getLogLevel() {
-        return logLevel;
-    }
-
-    public static void setLogLevel(int logLevel) {
-        LoggerUtils.logLevel = logLevel;
-    }
 }

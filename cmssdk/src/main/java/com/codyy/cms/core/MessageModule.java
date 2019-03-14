@@ -21,17 +21,4 @@ public interface MessageModule extends MessageHandler {
      */
     ArrayList<String> getWatchMsgNames();
 
-    /**
-     * 加载数据
-     *
-     * @memberof MessageModule
-     */
-    void load();
-
-    /**
-     * 保持数据
-     *
-     * @memberof MessageModule
-     */
-    void save();
 }

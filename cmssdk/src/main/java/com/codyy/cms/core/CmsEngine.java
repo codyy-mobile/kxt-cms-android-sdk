@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.codyy.cms.agora.SignalingToken;
+import com.codyy.cms.core.definition.AppActive;
 import com.codyy.cms.events.ConnectionStateChangedEvent;
 import com.codyy.cms.events.LoginEvent;
 import com.codyy.cms.ext.cls.ClassMsgModule;
@@ -18,8 +19,6 @@ import com.codyy.cms.ext.user.UserMsgModule;
 import com.codyy.cms.ext.whiteboard.WhiteboardMsgModule;
 import com.codyy.cms.utils.EbusUtils;
 import com.orhanobut.logger.Logger;
-
-import java.lang.ref.WeakReference;
 
 import io.agora.rtm.ErrorInfo;
 import io.agora.rtm.IResultCallback;
@@ -56,18 +55,10 @@ public class CmsEngine {
     /**
      * 消息分发对象实例
      *
-     * @private
-     * @type {MessageDispatcher}
-     * @memberof CmsEngine
      */
     private MessageDispatcher msgDispatcher;
-    private WeakReference<Context> contextWeakReference;
     /**
      * 负责创建消息
-     *
-     * @private
-     * @type {MessageFactory}
-     * @memberof CmsEngine
      */
     private MessageFactory msgFactory;
     private UserMsgModule userMsgModule;
@@ -184,9 +175,6 @@ public class CmsEngine {
 
     /**
      * 初始化 message modules
-     *
-     * @protected
-     * @memberof CmsEngine
      */
     private void initMsgModules(LoginOptions loginOpts, MessageFactory msgFactory) {
         this.userMsgModule = new UserMsgModule(new User(loginOpts), this.getMsgEngine(), msgFactory);
@@ -208,19 +196,67 @@ public class CmsEngine {
 
     /**
      * Return instance of UserMsgModule.
-     *
-     * @returns {UserMsgModule}
-     * @memberof CmsEngine
      */
-   public UserMsgModule getUserMsgModule() {
+    public UserMsgModule getUserMsgModule() {
         return this.userMsgModule;
+    }
+
+    public ClassMsgModule getClassMsgModule() {
+        return classMsgModule;
+    }
+
+    public void sendSignInMsg() {
+        if (getClassMsgModule() != null) {
+            getClassMsgModule().sendSignInMsg();
+        }
+    }
+
+    public void sendHandingUpMsg() {
+        if (getClassMsgModule() != null) {
+            getClassMsgModule().sendSignInMsg();
+        }
+    }
+
+    public void sendCancelHandingUpMsg() {
+        if (getClassMsgModule() != null) {
+            getClassMsgModule().sendSignInMsg();
+        }
+    }
+
+    public void sendEndSpeakingMsg() {
+        if (getClassMsgModule() != null) {
+            getClassMsgModule().sendSignInMsg();
+        }
+    }
+
+    public SysMsgModule getSysMsgModule() {
+        return sysMsgModule;
+    }
+
+    public void sendCaptureScreenUrlMsg(String originalMsgId, String imageUrl) {
+        if (getSysMsgModule() != null) {
+            getSysMsgModule().sendCaptureScreenUrlMsg(originalMsgId, imageUrl);
+        }
+    }
+
+    public void sendAppSwitchedMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
+        if (getSysMsgModule() != null) {
+            getSysMsgModule().sendAppSwitchedMsg(action, activeDuration, inactiveDuration);
+        }
+    }
+
+    public TextchatMsgModule getTextchatMsgModule() {
+        return textchatMsgModule;
+    }
+
+    public void sendChatMsg(String msg) {
+        if (getTextchatMsgModule() != null) {
+            getTextchatMsgModule().sendChatMsg(msg);
+        }
     }
 
     /**
      * Register message module and subscribe message.
-     *
-     * @param {MessageModule} msgModule
-     * @memberof CmsEngine
      */
     public void registerMsgModule(MessageModule msgModule) {
         this.getMsgDispatcher().subscribe(msgModule);
@@ -229,8 +265,6 @@ public class CmsEngine {
     /**
      * Unregister message module.
      *
-     * @param {MessageModule} msgModule
-     * @memberof CmsEngine
      */
     public void unregisterMsgModule(MessageModule... msgModules) {
         for (MessageModule msgModule : msgModules) {
