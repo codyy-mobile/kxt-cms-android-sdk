@@ -1,5 +1,25 @@
-# kxt-cms-android-sdk
-[CMS SDK 设计文档](http://10.1.60.90:9000/index.php/%E5%A3%B0%E7%BD%91%E4%BF%A1%E4%BB%A4%E6%9B%BF%E6%8D%A2Coco%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3#.E8.AF.BE.E5.A0.82.E7.B1.BB.EF.BC.88CLASS.EF.BC.89)
+# [CMS SDK 设计文档](http://10.1.60.90:9000/index.php/%E5%A3%B0%E7%BD%91%E4%BF%A1%E4%BB%A4%E6%9B%BF%E6%8D%A2Coco%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3#.E8.AF.BE.E5.A0.82.E7.B1.BB.EF.BC.88CLASS.EF.BC.89)
+
+#### 发布指令:
+```
+//cd cms sdk root dir
+gradle clean build uploadArchives
+```
+### cms sdk 添加依赖方式
+```
+// gradle 全局配置增加maven 私有地址
+allprojects {
+    repositories {
+        maven { url 'http://maven.5idoo.com/nexus/content/groups/mobile/' }
+    }
+}
+//app
+dependencies {
+    implementation 'com.codyy.mobile:cms-sdk:0.0.1'
+}
+```
+
+
 # 学员发起
 #### 课堂类(CLASS)
 ###### 签到
