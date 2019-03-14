@@ -63,6 +63,6 @@ public @interface MessageName {
 
     String SYS_CAPTURE_SCREEN = "sys_capture_screen";
     String SYS_CAPTURE_SCREEN_URL = "sys_capture_screen_url";
-    String SYS_SWITCH_APP = "sys_switch_app";
+    String SYS_SWITCH_APP = "sys_notify_app_status";
     String SYS_LOCK_KEYBOARD = "sys_lock_keyboard";
 }
