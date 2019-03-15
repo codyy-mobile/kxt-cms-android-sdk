@@ -46,7 +46,7 @@ public class MessageEngine {
      */
     private RtmChannel rtmChannel;
     private MsgEngineOpts options;
-
+    private long initTime;
     private int msgCount = 0;
     /**
      * 阔学堂用户Id到声网用户账号的映射字典。
@@ -74,6 +74,7 @@ public class MessageEngine {
     private AtomicInteger mChannelMemberCount = new AtomicInteger(0);
 
     public MessageEngine(CmsEngine cmsEngine, String channelId, MsgEngineOpts options) {
+        initTime = System.currentTimeMillis();
         this.accountMap = new HashMap<>();
         this.userIdMap = new SparseArray<>();
         this.memberJoinPendingList = new LinkedList<>();
@@ -210,7 +211,7 @@ public class MessageEngine {
      */
     private String getNextMsgId() {
         // Generate id
-        String id = this.options.liveClassId + "-" + this.options.userId + "-" + this.msgCount;
+        String id = this.options.liveClassId + "-" + this.options.userId + "-" + this.initTime + "-" + this.msgCount;
 
         // Increase message count.
         this.msgCount++;
@@ -291,7 +292,7 @@ public class MessageEngine {
                     // 设置用户id和信令账号
                     setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
                     // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
-                        cmsEngine.getUserMsgModule().sendUserInfoMsg();
+                    cmsEngine.getUserMsgModule().sendUserInfoMsg();
                 }
 
                 @Override

@@ -1,7 +1,5 @@
 package com.codyy.cms.events.cls;
 
-import java.util.List;
-
 public class BeginTestCardEvent {
 
     /**
@@ -14,6 +12,7 @@ public class BeginTestCardEvent {
      *  答题卡id
      */
     private int testCardId;
+    private int testId;
     /**
      * 时长，单位分钟
      */
@@ -22,10 +21,6 @@ public class BeginTestCardEvent {
      * 题目数
      */
     private int totalNumber;
-    /**
-     * 数组下标为题号，SS:单选， MS：多选， T：是非
-     */
-    private List<String> items;
 
     public int getTestCardId() {
         return testCardId;
@@ -51,11 +46,11 @@ public class BeginTestCardEvent {
         this.totalNumber = totalNumber;
     }
 
-    public List<String> getItems() {
-        return items;
+    public int getTestId() {
+        return testId;
     }
 
-    public void setItems(List<String> items) {
-        this.items = items;
+    public void setTestId(int testId) {
+        this.testId = testId;
     }
 }
