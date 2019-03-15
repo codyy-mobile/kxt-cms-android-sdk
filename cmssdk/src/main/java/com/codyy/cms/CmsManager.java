@@ -59,49 +59,49 @@ public class CmsManager {
     /**
      * 点名-签到
      */
-    public void sendSignInMsg() {
+    public static void sendSignInMsg() {
         CmsEngine.getInstance().sendSignInMsg();
     }
 
     /**
      * 举手发言
      */
-    public void sendHandingUpMsg() {
+    public static void sendHandingUpMsg() {
         CmsEngine.getInstance().sendHandingUpMsg();
     }
 
     /**
      * 取消举手
      */
-    public void sendCancelHandingUpMsg() {
+    public static void sendCancelHandingUpMsg() {
         CmsEngine.getInstance().sendCancelHandingUpMsg();
     }
 
     /**
      * 结束发言
      */
-    public void sendEndSpeakingMsg() {
+    public static void sendEndSpeakingMsg() {
         CmsEngine.getInstance().sendEndSpeakingMsg();
     }
 
     /**
      * 发送截屏图片地址
      */
-    public void sendCaptureScreenUrlMsg(@NonNull String originalMsgId, @NonNull String imageUrl) {
+    public static void sendCaptureScreenUrlMsg(@NonNull String originalMsgId, @NonNull String imageUrl) {
         CmsEngine.getInstance().sendCaptureScreenUrlMsg(originalMsgId, imageUrl);
     }
 
     /**
      * 发送认真度通知
      */
-    public void sendAppSwitchedMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
+    public static void sendAppSwitchedMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
         CmsEngine.getInstance().sendAppSwitchedMsg(action, activeDuration, inactiveDuration);
     }
 
     /**
      * 发送讨论消息
      */
-    public void sendChatMsg(@NonNull String msg) {
+    public static void sendChatMsg(@NonNull String msg) {
         CmsEngine.getInstance().sendChatMsg(msg);
     }
 }
