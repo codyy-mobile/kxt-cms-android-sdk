@@ -1,7 +1,5 @@
 package com.codyy.cms.utils;
 
-import com.orhanobut.logger.Logger;
-
 import org.greenrobot.eventbus.EventBus;
 
 public class EbusUtils {
@@ -17,15 +15,15 @@ public class EbusUtils {
     public static void post(Object object) {
         if (hasSubscriberForEvent(object.getClass())) {
             EventBus.getDefault().post(object);
-        } else {
-            Logger.e(object.getClass().getSimpleName() + "has not Subscriber For Event");
+//        } else {
+//            Logger.e(object.getClass().getSimpleName() + "has not Subscriber For Event");
         }
     }
     public static void postSticky(Object object) {
         if (hasSubscriberForEvent(object.getClass())) {
             EventBus.getDefault().postSticky(object);
-        } else {
-            Logger.e(object.getClass().getSimpleName() + "has not Subscriber For Event");
+//        } else {
+//            Logger.e(object.getClass().getSimpleName() + "has not Subscriber For Event");
         }
     }
     public static void register(Object subscriber) {

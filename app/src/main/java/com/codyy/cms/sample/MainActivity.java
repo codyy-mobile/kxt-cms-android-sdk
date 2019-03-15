@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         CmsManager.unregister(this);
-        CmsManager.logout();
     }
 
     /**
