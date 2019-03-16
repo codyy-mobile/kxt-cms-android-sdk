@@ -241,11 +241,14 @@ public class MessageFactory {
      *
      * @param originalMsgId originalMsgId
      * @param imageUrl      imageUrl
+     * @param targetUserIds 消息接收人
      * @return Message
      */
-    public Message createCaptureScreenUrlMsg(String originalMsgId, String imageUrl) {
+    public Message createCaptureScreenUrlMsg(String originalMsgId, String imageUrl, ArrayList<Integer> targetUserIds) {
         User user = this.getDefaultUser();
-        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_CAPTURE_SCREEN_URL), new Screenshot(originalMsgId, imageUrl, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+        Message message = new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_CAPTURE_SCREEN_URL), new Screenshot(originalMsgId, imageUrl, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+        message.header.targetUserIds = targetUserIds;
+        return message;
     }
 
     /**

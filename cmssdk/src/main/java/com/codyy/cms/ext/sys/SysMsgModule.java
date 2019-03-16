@@ -18,6 +18,7 @@ public class SysMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
             MessageName.SYS_CAPTURE_SCREEN
     };
+    public ArrayList<Integer> targetUserIds;
 
     public SysMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {
         super(messageEngine, messageFactory);
@@ -37,7 +38,8 @@ public class SysMsgModule extends AbstractMsgModule implements MessageModule {
      * 发送截屏图片地址
      */
     public void sendCaptureScreenUrlMsg(String originalMsgId, String imageUrl) {
-        sendMessage(this.getMessageFactory().createCaptureScreenUrlMsg(originalMsgId, imageUrl));
+        sendMessage(this.getMessageFactory().createCaptureScreenUrlMsg(originalMsgId, imageUrl, targetUserIds));
+        targetUserIds = null;
     }
 
     /**
@@ -54,6 +56,7 @@ public class SysMsgModule extends AbstractMsgModule implements MessageModule {
                 for (int userId : message.header.targetUserIds) {
                     //功能：通过信令消息通知所有人，收到后检查msg header里的receiverAccounts字段，如果包含自己则执行截图操作，否则忽略此消息
                     if (getMessageEngine().getCmsEngine().getUserMsgModule().getMe().attributes.userId == userId) {
+                        targetUserIds = message.header.targetUserIds;
                         EbusUtils.post(new CaptureScreenEvent(message.header.id));
                     }
                 }
