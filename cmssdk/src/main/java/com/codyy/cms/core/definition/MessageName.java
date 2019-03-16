@@ -60,6 +60,7 @@ public @interface MessageName {
     String WHITEBOARD_ERASE_OBJECT = "whiteboard_erase_object";
     String WHITEBOARD_UNDO_REDO = "whiteboard_undo_redo";
     String WHITEBOARD_CLEAR_ALL = "whiteboard_clear_all";
+    String WHITEBOARD_TRANSFORM_OBJECT = "whiteboard_transform_object";
 
     String SYS_CAPTURE_SCREEN = "sys_capture_screen";
     String SYS_CAPTURE_SCREEN_URL = "sys_capture_screen_url";

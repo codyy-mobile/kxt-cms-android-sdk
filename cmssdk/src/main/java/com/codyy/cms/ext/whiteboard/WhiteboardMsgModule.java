@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.codyy.cms.core.definition.MessageName.WHITEBOARD_TRANSFORM_OBJECT;
+
 public class WhiteboardMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
             MessagesRuleDef.WHITEBOARD_CREATE_BOARD.name,
@@ -32,7 +34,8 @@ public class WhiteboardMsgModule extends AbstractMsgModule implements MessageMod
             MessagesRuleDef.WHITEBOARD_DRAW_SHAPE.name,
             MessagesRuleDef.WHITEBOARD_ERASE_OBJECT.name,
             MessagesRuleDef.WHITEBOARD_UNDO_REDO.name,
-            MessagesRuleDef.WHITEBOARD_CLEAR_ALL.name
+            MessagesRuleDef.WHITEBOARD_CLEAR_ALL.name,
+            WHITEBOARD_TRANSFORM_OBJECT
     };
 
     public WhiteboardMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {
@@ -52,39 +55,9 @@ public class WhiteboardMsgModule extends AbstractMsgModule implements MessageMod
     @Override
     public void handle(String msgName, Message message) {
         try {
-            EbusUtils.post(new WhiteBoardEvent(new JSONObject(GsonUtils.bean2JsonStr(message.body))));
+            EbusUtils.post(new WhiteBoardEvent(new JSONObject(GsonUtils.bean2JsonStr(message))));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-//        switch (msgName) {
-//            case MessageName.WHITEBOARD_FREE_OPERATION:
-//                break;
-//            case MessageName.WHITEBOARD_CREATE_BOARD:
-//                break;
-//            case MessageName.WHITEBOARD_DELETE_BOARD:
-//                break;
-//            case MessageName.WHITEBOARD_SELECT_BOARD:
-//                break;
-//            case MessageName.WHITEBOARD_SCROLL_BOARD:
-//                break;
-//            case MessageName.WHITEBOARD_SWITCH_PAGE:
-//                break;
-//            case MessageName.WHITEBOARD_SELECT_BRUSH:
-//                break;
-//            case MessageName.WHITEBOARD_POINTER_MOVE:
-//                break;
-//            case MessageName.WHITEBOARD_FREE_DRAWING:
-//                break;
-//            case MessageName.WHITEBOARD_DRAW_TEXT:
-//                break;
-//            case MessageName.WHITEBOARD_DRAW_SHAPE:
-//                break;
-//            case MessageName.WHITEBOARD_ERASE_OBJECT:
-//                break;
-//            case MessageName.WHITEBOARD_UNDO_REDO:
-//                break;
-//            case MessageName.WHITEBOARD_CLEAR_ALL:
-//                break;
-//        }
     }
 }
