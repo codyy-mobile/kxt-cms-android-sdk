@@ -10,6 +10,8 @@ import android.support.annotation.Nullable;
 import com.codyy.cms.core.CmsEngine;
 import com.codyy.cms.utils.LoggerUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 public class CmsInitProvider extends ContentProvider {
     private static final String TAG = "CMS_LOGGER";
     @Override

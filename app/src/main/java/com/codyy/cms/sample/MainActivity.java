@@ -48,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        CmsManager.register(this);
+//        CmsManager.register(this);//不使用索引
+        CmsManager.register(this, new CmsIndex());//使用索引，提升性能
         editText = findViewById(R.id.userId);
         CmsManager.init(new CmsEngineOpts("6ddb8bc251564e95af743486e76dc40e", ""), 1);
         Log.e("Create", System.currentTimeMillis() + "");

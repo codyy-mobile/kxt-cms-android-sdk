@@ -11,6 +11,9 @@ import com.codyy.cms.core.definition.AppActive;
 import com.codyy.cms.provider.CmsLifecycleObserver;
 import com.codyy.cms.utils.EbusUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.meta.SubscriberInfoIndex;
+
 public class CmsManager {
     /**
      * 注册事件监听
@@ -26,6 +29,17 @@ public class CmsManager {
             throw new IllegalArgumentException("subscriber must be extends support v4 package FragmentActivity or  Fragment");
         }
         EbusUtils.register(subscriber);
+    }
+
+    /**
+     * 使用索引
+     *
+     * @param subscriber 订阅者
+     * @param infoIndex  索引
+     */
+    public static void register(Object subscriber, SubscriberInfoIndex infoIndex) {
+        EventBus.builder().addIndex(infoIndex).installDefaultEventBus();
+        register(subscriber);
     }
 
     /**
