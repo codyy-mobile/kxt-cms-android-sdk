@@ -18,7 +18,6 @@ import com.codyy.cms.events.cls.EndSigninEvent;
 import com.codyy.cms.events.cls.EndSpeakingEvent;
 import com.codyy.cms.events.cls.EndTestCardEvent;
 import com.codyy.cms.events.cls.EndTestingEvent;
-import com.codyy.cms.events.cls.ExplainTestingEvent;
 import com.codyy.cms.events.cls.SelectSpeakerEvent;
 import com.codyy.cms.events.cls.SharingDesktopEvent;
 import com.codyy.cms.events.cls.StartSigninEvent;
@@ -28,9 +27,6 @@ import com.codyy.cms.events.cls.SwitchSpeakerEvent;
 import com.codyy.cms.utils.EbusUtils;
 import com.codyy.cms.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,20 +167,8 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                 EbusUtils.post(endTestingEventMessage.body);
                 break;
             case MessageName.CLASS_EXPLAIN_TESTING:
-                try {
-                    JSONObject object = new JSONObject();
-                    object.put("content", new JSONObject(GsonUtils.bean2JsonStr(message.body)));
-                    EbusUtils.post(new ExplainTestingEvent(object));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 break;
             case MessageName.CLASS_EXIT_EXPLAINING_TEST:
-                try {
-                    EbusUtils.post(new ExplainTestingEvent(new JSONObject(GsonUtils.bean2JsonStr(message.body))));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 break;
             case MessageName.CLASS_BEGIN_TESTCARD:
                 Message<BeginTestCardEvent> beginTestCardEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<BeginTestCardEvent>>() {

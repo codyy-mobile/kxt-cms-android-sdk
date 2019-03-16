@@ -9,24 +9,24 @@ public class BeginTestingEvent {
      * totalNumber : 5
      */
 
-    private String testId;
-    private String classTestId;
+    private int testId;
+    private int classTestId;
     private int duration;
     private int totalNumber;
 
-    public String getTestId() {
+    public int getTestId() {
         return testId;
     }
 
-    public void setTestId(String testId) {
+    public void setTestId(int testId) {
         this.testId = testId;
     }
 
-    public String getClassTestId() {
+    public int getClassTestId() {
         return classTestId;
     }
 
-    public void setClassTestId(String classTestId) {
+    public void setClassTestId(int classTestId) {
         this.classTestId = classTestId;
     }
 

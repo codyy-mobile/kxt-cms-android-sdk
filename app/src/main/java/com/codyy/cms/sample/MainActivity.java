@@ -182,22 +182,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 订阅测验讲解事件
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(ExplainTestingEvent event) {
-        Logger.d("测验讲解");
-    }
-
-    /**
-     * 订阅退出测验讲解事件
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EndExplainTestingEvent event) {
-        Logger.d("退出测验讲解");
-    }
-
-    /**
      * 订阅开始答题卡答题事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)

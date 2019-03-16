@@ -27,7 +27,12 @@ public @interface MessageName {
     String CLASS_SWITCH_SPEAKER = "class_switch_speaker";
     String CLASS_BEGIN_TESTING = "class_begin_testing";
     String CLASS_END_TESTING = "class_end_testing";
+    /**
+     * 测验讲解（已取消，功能合并到结束测验消息class_end_testing){@link MessageName#CLASS_END_TESTING}
+     */
+    @Deprecated
     String CLASS_EXPLAIN_TESTING = "class_explain_testing";
+    @Deprecated
     String CLASS_EXIT_EXPLAINING_TEST = "class_exit_explaining_test";
     String CLASS_BEGIN_TESTCARD = "class_begin_testcard";
     String CLASS_END_TESTCARD = "class_end_testcard";
