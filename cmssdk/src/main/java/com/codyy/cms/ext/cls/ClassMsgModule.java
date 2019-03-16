@@ -45,8 +45,6 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
             MessagesRuleDef.CLASS_SWITCH_SPEAKER.name,
             MessagesRuleDef.CLASS_BEGIN_TESTING.name,
             MessagesRuleDef.CLASS_END_TESTING.name,
-            MessagesRuleDef.CLASS_EXPLAIN_TESTING.name,
-            MessagesRuleDef.CLASS_EXIT_EXPLAINING_TEST.name,
             MessagesRuleDef.CLASS_BEGIN_TESTCARD.name,
             MessagesRuleDef.CLASS_END_TESTCARD.name,
             MessagesRuleDef.CLASS_TESTCARD_RESULT.name,
@@ -166,10 +164,6 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                 }.getType());
                 EbusUtils.post(endTestingEventMessage.body);
                 break;
-            case MessageName.CLASS_EXPLAIN_TESTING:
-                break;
-            case MessageName.CLASS_EXIT_EXPLAINING_TEST:
-                break;
             case MessageName.CLASS_BEGIN_TESTCARD:
                 Message<BeginTestCardEvent> beginTestCardEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<BeginTestCardEvent>>() {
                 }.getType());
@@ -180,8 +174,6 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                 }.getType());
                 EbusUtils.post(endTestCardEventMessage.body);
                 break;
-//            case MessageName.CLASS_TESTCARD_RESULT:
-//                break;
             case MessageName.CLASS_START_SHARING_DESKTOP:
                 Message<SharingDesktopEvent> sharingDesktopEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<SharingDesktopEvent>>() {
                 }.getType());

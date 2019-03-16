@@ -101,10 +101,6 @@ public class MessagesRuleDef {
             = new MessagesRuleDef(MessageName.CLASS_BEGIN_TESTING, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
     public static final MessagesRuleDef CLASS_END_TESTING
             = new MessagesRuleDef(MessageName.CLASS_END_TESTING, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_EXPLAIN_TESTING
-            = new MessagesRuleDef(MessageName.CLASS_EXPLAIN_TESTING, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_EXIT_EXPLAINING_TEST
-            = new MessagesRuleDef(MessageName.CLASS_EXIT_EXPLAINING_TEST, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
     public static final MessagesRuleDef CLASS_BEGIN_TESTCARD
             = new MessagesRuleDef(MessageName.CLASS_BEGIN_TESTCARD, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
     public static final MessagesRuleDef CLASS_END_TESTCARD

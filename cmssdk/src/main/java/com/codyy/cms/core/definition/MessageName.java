@@ -27,16 +27,8 @@ public @interface MessageName {
     String CLASS_SWITCH_SPEAKER = "class_switch_speaker";
     String CLASS_BEGIN_TESTING = "class_begin_testing";
     String CLASS_END_TESTING = "class_end_testing";
-    /**
-     * 测验讲解（已取消，功能合并到结束测验消息class_end_testing){@link MessageName#CLASS_END_TESTING}
-     */
-    @Deprecated
-    String CLASS_EXPLAIN_TESTING = "class_explain_testing";
-    @Deprecated
-    String CLASS_EXIT_EXPLAINING_TEST = "class_exit_explaining_test";
     String CLASS_BEGIN_TESTCARD = "class_begin_testcard";
     String CLASS_END_TESTCARD = "class_end_testcard";
-    String CLASS_SUBMIT_TESTCARD = "class_submit_testcard";
     String CLASS_TESTCARD_RESULT = "class_testcard_result";
     String CLASS_START_SHARING_DESKTOP = "class_start_sharing_desktop";
     String CLASS_STOP_SHARING_DESKTOP = "class_stop_sharing_desktop";
@@ -70,5 +62,4 @@ public @interface MessageName {
     String SYS_CAPTURE_SCREEN = "sys_capture_screen";
     String SYS_CAPTURE_SCREEN_URL = "sys_capture_screen_url";
     String SYS_NOTIFY_APP_STATUS = "sys_notify_app_status";
-    String SYS_LOCK_KEYBOARD = "sys_lock_keyboard";
 }
