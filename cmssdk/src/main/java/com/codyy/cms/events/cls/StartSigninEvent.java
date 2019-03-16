@@ -8,6 +8,7 @@ public class StartSigninEvent {
      */
 
     private int number;
+    private int totalNum;
     private int timeout;
 
     public int getNumber() {
@@ -24,5 +25,13 @@ public class StartSigninEvent {
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    public int getTotalNum() {
+        return totalNum;
+    }
+
+    public void setTotalNum(int totalNum) {
+        this.totalNum = totalNum;
     }
 }

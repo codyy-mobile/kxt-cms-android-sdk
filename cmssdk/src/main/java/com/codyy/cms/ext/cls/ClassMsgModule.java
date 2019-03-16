@@ -126,10 +126,14 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                 EbusUtils.post(new ClsEndEvent());
                 break;
             case MessageName.CLASS_START_SIGNIN:
-                EbusUtils.post(new StartSigninEvent());
+                Message<StartSigninEvent> startSigninEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<StartSigninEvent>>() {
+                }.getType());
+                EbusUtils.post(startSigninEventMessage.body);
                 break;
             case MessageName.CLASS_END_SIGNIN:
-                EbusUtils.post(new EndSigninEvent());
+                Message<EndSigninEvent> endSigninEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<EndSigninEvent>>() {
+                }.getType());
+                EbusUtils.post(endSigninEventMessage.body);
                 break;
             case MessageName.CLASS_CLEAR_ALL_HAND_UP:
                 EbusUtils.post(new ClearAllHandUpEvent());
