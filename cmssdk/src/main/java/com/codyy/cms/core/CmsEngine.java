@@ -213,19 +213,24 @@ public class CmsEngine {
 
     public void sendHandingUpMsg() {
         if (getClassMsgModule() != null) {
-            getClassMsgModule().sendSignInMsg();
+            getClassMsgModule().sendHandingUpMsg();
         }
     }
 
     public void sendCancelHandingUpMsg() {
         if (getClassMsgModule() != null) {
-            getClassMsgModule().sendSignInMsg();
+            getClassMsgModule().sendCancelHandingUpMsg();
         }
     }
 
     public void sendEndSpeakingMsg() {
         if (getClassMsgModule() != null) {
-            getClassMsgModule().sendSignInMsg();
+            getClassMsgModule().sendEndSpeakingMsg();
+        }
+    }
+    public void createNotifyVideoRateMsg(int videoRate) {
+        if (getClassMsgModule() != null) {
+            getClassMsgModule().createNotifyVideoRateMsg(videoRate);
         }
     }
 

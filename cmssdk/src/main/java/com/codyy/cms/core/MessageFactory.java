@@ -9,7 +9,6 @@ import com.codyy.cms.events.sys.SwitchApp;
 import com.codyy.cms.events.textchat.TextChatMsg;
 import com.codyy.cms.ext.user.User;
 import com.codyy.cms.ext.user.UserMsgModule;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,7 +109,7 @@ public class MessageFactory {
      * <p>
      * Response: N/A
      *
-     * @return
+     * @return Message
      */
     public Message createSignInMsg() {
         return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_SIGNIN));
@@ -124,7 +123,7 @@ public class MessageFactory {
      * <p>
      * 发送类型：CP2M（No teacher to Teacher & Assistant & Anonymouse_Admin）
      *
-     * @return
+     * @return Message
      */
     public Message createHandUpMsg() {
         try {
@@ -147,7 +146,7 @@ public class MessageFactory {
      * <p>
      * Response: N/A
      *
-     * @return
+     * @return Message
      */
     public Message createCancelHandUpMsg() {
         return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_CANCEL_HAND_UP));
@@ -161,12 +160,32 @@ public class MessageFactory {
      * <p>
      * 发送类型：CP2A（Teacher/Student to All）
      *
-     * @return
+     * @return Message
      */
     public Message createEndSpeakerMsg() {
         User user = this.getDefaultUser();
         try {
             return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_END_SPEAKING), new JSONObject().put("userId", user.attributes.userId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 名称：发送视频码率
+     * 消息名称：class_notify_video_rate(学员发起)
+     * <p>
+     * 功能：通过信令消息通知匿名管理员
+     * <p>
+     * 发送类型：CP2P（Student to Anonymouse_Admin）
+     *
+     * @param videoRate 视频码率
+     * @return Message
+     */
+    public Message createNotifyVideoRateMsg(int videoRate) {
+        try {
+            return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_NOTIFY_VIDEO_RATE), new JSONObject().put("videoRate", videoRate));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -199,9 +218,9 @@ public class MessageFactory {
      * <p>
      * 发送类型：CP2P（Student to 发送者）
      *
-     * @param originalMsgId
-     * @param imageUrl
-     * @return
+     * @param originalMsgId originalMsgId
+     * @param imageUrl imageUrl
+     * @return Message
      */
     public Message createCaptureScreenUrlMsg(String originalMsgId, String imageUrl) {
         User user = this.getDefaultUser();
@@ -216,14 +235,14 @@ public class MessageFactory {
      * <p>
      * 发送类型：CP2M（Student to Teacher & Assistant & Anonymouse_Admin）
      *
-     * @param action
-     * @param activeDuration
-     * @param inactiveDuration
-     * @return
+     * @param action AppActive
+     * @param activeDuration activeDuration
+     * @param inactiveDuration inactiveDuration
+     * @return Message
      */
     public Message createSwitchAppMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
         User user = this.getDefaultUser();
-        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_SWITCH_APP), new SwitchApp(action, activeDuration, inactiveDuration, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_NOTIFY_APP_STATUS), new SwitchApp(action, activeDuration, inactiveDuration, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
     }
     /*end->sys***********************************************************************************/
 

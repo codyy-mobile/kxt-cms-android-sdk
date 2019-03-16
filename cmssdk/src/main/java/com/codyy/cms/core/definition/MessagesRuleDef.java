@@ -117,6 +117,8 @@ public class MessagesRuleDef {
             = new MessagesRuleDef(MessageName.CLASS_STOP_SHARING_DESKTOP, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
     public static final MessagesRuleDef CLASS_ADJUST_VIDEO
             = new MessagesRuleDef(MessageName.CLASS_ADJUST_VIDEO, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
+    public static final MessagesRuleDef CLASS_NOTIFY_VIDEO_RATE
+            = new MessagesRuleDef(MessageName.CLASS_NOTIFY_VIDEO_RATE, MessageType.CLASS, MsgSendType.CP2P, singletonList(ClassUserRole.STUDENT), singletonList(ClassUserRole.ANONYMOUSE_ADMIN));
 
 
     public static final MessagesRuleDef TEXTCHAT_SEND_MSG
@@ -173,8 +175,6 @@ public class MessagesRuleDef {
             = new MessagesRuleDef(MessageName.SYS_CAPTURE_SCREEN, MessageType.SYS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty, true);
     public static final MessagesRuleDef SYS_CAPTURE_SCREEN_URL
             = new MessagesRuleDef(MessageName.SYS_CAPTURE_SCREEN_URL, MessageType.SYS, MsgSendType.CP2P, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.ASSISTANT, ClassUserRole.TEACHER, ClassUserRole.CLASS_ADMIN));
-    public static final MessagesRuleDef SYS_SWITCH_APP
-            = new MessagesRuleDef(MessageName.SYS_SWITCH_APP, MessageType.SYS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.ANONYMOUSE_ADMIN));
-    public static final MessagesRuleDef SYS_LOCK_KEYBOARD
-            = new MessagesRuleDef(MessageName.SYS_LOCK_KEYBOARD, MessageType.SYS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
+    public static final MessagesRuleDef SYS_NOTIFY_APP_STATUS
+            = new MessagesRuleDef(MessageName.SYS_NOTIFY_APP_STATUS, MessageType.SYS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.ANONYMOUSE_ADMIN));
 }

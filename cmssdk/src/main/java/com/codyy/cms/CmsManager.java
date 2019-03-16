@@ -85,9 +85,19 @@ public class CmsManager {
     }
 
     /**
+     * 发送视频码率
+     *
+     * @param videoRate 视频码率
+     */
+    public static void createNotifyVideoRateMsg(int videoRate) {
+        CmsEngine.getInstance().createNotifyVideoRateMsg(videoRate);
+    }
+
+    /**
      * 发送截屏图片地址
+     *
      * @param originalMsgId 发送截图指令的消息Id
-     * @param imageUrl 截图地址
+     * @param imageUrl      截图地址
      */
     public static void sendCaptureScreenUrlMsg(@NonNull String originalMsgId, @NonNull String imageUrl) {
         CmsEngine.getInstance().sendCaptureScreenUrlMsg(originalMsgId, imageUrl);
@@ -95,8 +105,9 @@ public class CmsManager {
 
     /**
      * 发送认真度通知
-     * @param action {@link AppActive} "active"|"inactive", //切到前台或后台
-     * @param activeDuration 单位分钟
+     *
+     * @param action           {@link AppActive} "active"|"inactive", //切到前台或后台
+     * @param activeDuration   单位分钟
      * @param inactiveDuration 单位分钟
      */
     public static void sendAppSwitchedMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
@@ -105,6 +116,7 @@ public class CmsManager {
 
     /**
      * 发送讨论消息
+     *
      * @param msg 非空消息内容
      */
     public static void sendChatMsg(@NonNull String msg) {

@@ -100,6 +100,14 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
         sendMessage(getMessageFactory().createEndSpeakerMsg());
     }
 
+    /**
+     * 发送视频码率
+     * @param videoRate 视频码率
+     */
+    public void createNotifyVideoRateMsg(int videoRate) {
+        sendMessage(getMessageFactory().createNotifyVideoRateMsg(videoRate));
+    }
+
     @Override
     public void handle(String msgName, Message message) {
         switch (msgName) {

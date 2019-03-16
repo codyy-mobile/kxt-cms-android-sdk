@@ -36,7 +36,7 @@ public @interface MessageName {
     String CLASS_START_SHARING_DESKTOP = "class_start_sharing_desktop";
     String CLASS_STOP_SHARING_DESKTOP = "class_stop_sharing_desktop";
     String CLASS_ADJUST_VIDEO = "class_adjust_video";
-
+    String CLASS_NOTIFY_VIDEO_RATE = "class_notify_video_rate";
     String TEXTCHAT_SEND_MSG = "textchat_send_msg";
     String TEXTCHAT_DELETE_MSG = "textchat_delete_msg";
     String TEXTCHAT_DISABLE_CHAT = "textchat_disable_chat";
@@ -64,6 +64,6 @@ public @interface MessageName {
 
     String SYS_CAPTURE_SCREEN = "sys_capture_screen";
     String SYS_CAPTURE_SCREEN_URL = "sys_capture_screen_url";
-    String SYS_SWITCH_APP = "sys_notify_app_status";
+    String SYS_NOTIFY_APP_STATUS = "sys_notify_app_status";
     String SYS_LOCK_KEYBOARD = "sys_lock_keyboard";
 }
