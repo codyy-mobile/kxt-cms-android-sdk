@@ -5,6 +5,7 @@ import com.codyy.cms.core.MessageEngine;
 import com.codyy.cms.core.MessageFactory;
 import com.codyy.cms.core.MessageModule;
 import com.codyy.cms.core.definition.Message;
+import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.events.whiteboard.WhiteBoardEvent;
@@ -21,21 +22,21 @@ import static com.codyy.cms.core.definition.MessageName.WHITEBOARD_TRANSFORM_OBJ
 
 public class WhiteboardMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
-            MessagesRuleDef.WHITEBOARD_CREATE_BOARD.name,
-            MessagesRuleDef.WHITEBOARD_DELETE_BOARD.name,
-            MessagesRuleDef.WHITEBOARD_SELECT_BOARD.name,
-            MessagesRuleDef.WHITEBOARD_SCROLL_BOARD.name,
-            MessagesRuleDef.WHITEBOARD_SWITCH_PAGE.name,
-            MessagesRuleDef.WHITEBOARD_FREE_OPERATION.name,
-            MessagesRuleDef.WHITEBOARD_SELECT_BRUSH.name,
-            MessagesRuleDef.WHITEBOARD_POINTER_MOVE.name,
-            MessagesRuleDef.WHITEBOARD_FREE_DRAWING.name,
-            MessagesRuleDef.WHITEBOARD_DRAW_TEXT.name,
-            MessagesRuleDef.WHITEBOARD_DRAW_SHAPE.name,
-            MessagesRuleDef.WHITEBOARD_ERASE_OBJECT.name,
-            MessagesRuleDef.WHITEBOARD_UNDO_REDO.name,
-            MessagesRuleDef.WHITEBOARD_CLEAR_ALL.name,
-            WHITEBOARD_TRANSFORM_OBJECT
+            MessageName.WHITEBOARD_CREATE_BOARD,
+            MessageName.WHITEBOARD_DELETE_BOARD,
+            MessageName.WHITEBOARD_SELECT_BOARD,
+            MessageName.WHITEBOARD_SCROLL_BOARD,
+            MessageName.WHITEBOARD_SWITCH_PAGE,
+            MessageName.WHITEBOARD_FREE_OPERATION,
+            MessageName.WHITEBOARD_SELECT_BRUSH,
+            MessageName.WHITEBOARD_POINTER_MOVE,
+            MessageName.WHITEBOARD_FREE_DRAWING,
+            MessageName.WHITEBOARD_DRAW_TEXT,
+            MessageName.WHITEBOARD_DRAW_SHAPE,
+            MessageName.WHITEBOARD_ERASE_OBJECT,
+            MessageName.WHITEBOARD_UNDO_REDO,
+            MessageName.WHITEBOARD_CLEAR_ALL,
+            MessageName.WHITEBOARD_TRANSFORM_OBJECT
     };
 
     public WhiteboardMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {

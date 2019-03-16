@@ -1,7 +1,6 @@
 package com.codyy.cms.ext.sys;
 
 import com.codyy.cms.core.AbstractMsgModule;
-import com.codyy.cms.core.CmsException;
 import com.codyy.cms.core.MessageEngine;
 import com.codyy.cms.core.MessageFactory;
 import com.codyy.cms.core.MessageModule;
@@ -9,7 +8,6 @@ import com.codyy.cms.core.definition.AppActive;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
-import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.events.sys.CaptureScreenEvent;
 import com.codyy.cms.utils.EbusUtils;
 
@@ -18,7 +16,7 @@ import java.util.Arrays;
 
 public class SysMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
-            MessagesRuleDef.SYS_CAPTURE_SCREEN.name
+            MessageName.SYS_CAPTURE_SCREEN
     };
 
     public SysMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {

@@ -89,8 +89,19 @@ public class CmsManager {
      *
      * @param videoRate 视频码率
      */
-    public static void createNotifyVideoRateMsg(int videoRate) {
-        CmsEngine.getInstance().createNotifyVideoRateMsg(videoRate);
+    public static void sendNotifyVideoRateMsg(int videoRate) {
+        CmsEngine.getInstance().sendNotifyVideoRateMsg(videoRate);
+    }
+
+    /**
+     * 学员提交试卷,包括测验和答题卡
+     * 学员答题后通过调用接口提交试卷答题内容，同时通过信令消息通知教师试卷已提交
+     *
+     * @param testId      试卷id
+     * @param classTestId 课堂测验编号
+     */
+    public static void sendSubmitTestingMsg(int testId, int classTestId) {
+        CmsEngine.getInstance().sendSubmitTestingMsg(testId, classTestId);
     }
 
     /**

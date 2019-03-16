@@ -192,6 +192,27 @@ public class MessageFactory {
         return null;
     }
 
+    /**
+     * 名称：学员提交试卷
+     * 消息名称：class_submit_testing(学员发起)
+     * <p>
+     * 功能：学员答题后通过调用接口提交试卷答题内容，同时通过信令消息通知教师试卷已提交
+     * <p>
+     * 发送类型：CP2M（Student to Teacher & Assistant & Class_Admin）
+     *
+     * @param testId      试卷id
+     * @param classTestId 课堂测验编号
+     * @return Message
+     */
+    public Message createSubmitTestingMsg(int testId, int classTestId) {
+        try {
+            return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_SUBMIT_TESTING), new JSONObject().put("testId", testId).put("classTestId", classTestId));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /*end->class***********************************************************************************/
     /*start->textchat******************************************************************************/
 
@@ -219,7 +240,7 @@ public class MessageFactory {
      * 发送类型：CP2P（Student to 发送者）
      *
      * @param originalMsgId originalMsgId
-     * @param imageUrl imageUrl
+     * @param imageUrl      imageUrl
      * @return Message
      */
     public Message createCaptureScreenUrlMsg(String originalMsgId, String imageUrl) {
@@ -235,8 +256,8 @@ public class MessageFactory {
      * <p>
      * 发送类型：CP2M（Student to Teacher & Assistant & Anonymouse_Admin）
      *
-     * @param action AppActive
-     * @param activeDuration activeDuration
+     * @param action           AppActive
+     * @param activeDuration   activeDuration
      * @param inactiveDuration inactiveDuration
      * @return Message
      */

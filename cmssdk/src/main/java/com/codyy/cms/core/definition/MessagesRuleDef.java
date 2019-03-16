@@ -63,114 +63,30 @@ public class MessagesRuleDef {
     /**
      * 消息定义和规则定义
      */
-    public static final MessagesRuleDef USER_ONLINE
-            = new MessagesRuleDef(MessageName.USER_ONLINE, MessageType.USER, MsgSendType.CP2A, empty, empty);
-    public static final MessagesRuleDef USER_OFFLIE
-            = new MessagesRuleDef(MessageName.USER_OFFLIE, MessageType.USER, MsgSendType.CP2A, empty, empty);
     public static final MessagesRuleDef USER_INFO
             = new MessagesRuleDef(MessageName.USER_INFO, MessageType.USER, MsgSendType.CP2A, empty, empty);
 
 
-    public static final MessagesRuleDef CLASS_START_WARMINGUP
-            = new MessagesRuleDef(MessageName.CLASS_START_WARMINGUP, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_STOP_WARMINGUP
-            = new MessagesRuleDef(MessageName.CLASS_STOP_WARMINGUP, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_START
-            = new MessagesRuleDef(MessageName.CLASS_START, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_END
-            = new MessagesRuleDef(MessageName.CLASS_END, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_START_SIGNIN
-            = new MessagesRuleDef(MessageName.CLASS_START_SIGNIN, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_END_SIGNIN
-            = new MessagesRuleDef(MessageName.CLASS_END_SIGNIN, MessageType.CLASS, MsgSendType.CP2A, empty, empty);
     public static final MessagesRuleDef CLASS_SIGNIN
-            = new MessagesRuleDef(MessageName.CLASS_SIGNIN, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.ANONYMOUSE_ADMIN));
+            = new MessagesRuleDef(MessageName.CLASS_SIGNIN, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN, ClassUserRole.ANONYMOUSE_ADMIN));
+    public static final MessagesRuleDef CLASS_SUBMIT_TESTING
+            = new MessagesRuleDef(MessageName.CLASS_SUBMIT_TESTING, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef CLASS_HAND_UP
-            = new MessagesRuleDef(MessageName.CLASS_HAND_UP, MessageType.CLASS, MsgSendType.CP2M, asList(ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT));
+            = new MessagesRuleDef(MessageName.CLASS_HAND_UP, MessageType.CLASS, MsgSendType.CP2M, asList(ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef CLASS_CANCEL_HAND_UP
-            = new MessagesRuleDef(MessageName.CLASS_CANCEL_HAND_UP, MessageType.CLASS, MsgSendType.CP2M, asList(ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT));
-    public static final MessagesRuleDef CLASS_CLEAR_ALL_HAND_UP
-            = new MessagesRuleDef(MessageName.CLASS_CLEAR_ALL_HAND_UP, MessageType.CLASS, MsgSendType.CP2A, asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT), empty);
-    public static final MessagesRuleDef CLASS_SELECT_SPEAKER
-            = new MessagesRuleDef(MessageName.CLASS_SELECT_SPEAKER, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
+            = new MessagesRuleDef(MessageName.CLASS_CANCEL_HAND_UP, MessageType.CLASS, MsgSendType.CP2M, asList(ClassUserRole.TEACHER, ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef CLASS_END_SPEAKING
             = new MessagesRuleDef(MessageName.CLASS_END_SPEAKING, MessageType.CLASS, MsgSendType.CP2A, asList(ClassUserRole.TEACHER, ClassUserRole.STUDENT), empty);
-    public static final MessagesRuleDef CLASS_SWITCH_SPEAKER
-            = new MessagesRuleDef(MessageName.CLASS_SWITCH_SPEAKER, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_BEGIN_TESTING
-            = new MessagesRuleDef(MessageName.CLASS_BEGIN_TESTING, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_END_TESTING
-            = new MessagesRuleDef(MessageName.CLASS_END_TESTING, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_BEGIN_TESTCARD
-            = new MessagesRuleDef(MessageName.CLASS_BEGIN_TESTCARD, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_END_TESTCARD
-            = new MessagesRuleDef(MessageName.CLASS_END_TESTCARD, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_TESTCARD_RESULT
-            = new MessagesRuleDef(MessageName.CLASS_TESTCARD_RESULT, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.ANONYMOUSE_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT));
-    public static final MessagesRuleDef CLASS_START_SHARING_DESKTOP
-            = new MessagesRuleDef(MessageName.CLASS_START_SHARING_DESKTOP, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_STOP_SHARING_DESKTOP
-            = new MessagesRuleDef(MessageName.CLASS_STOP_SHARING_DESKTOP, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef CLASS_ADJUST_VIDEO
-            = new MessagesRuleDef(MessageName.CLASS_ADJUST_VIDEO, MessageType.CLASS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
     public static final MessagesRuleDef CLASS_NOTIFY_VIDEO_RATE
             = new MessagesRuleDef(MessageName.CLASS_NOTIFY_VIDEO_RATE, MessageType.CLASS, MsgSendType.CP2P, singletonList(ClassUserRole.STUDENT), singletonList(ClassUserRole.ANONYMOUSE_ADMIN));
 
 
     public static final MessagesRuleDef TEXTCHAT_SEND_MSG
             = new MessagesRuleDef(MessageName.TEXTCHAT_SEND_MSG, MessageType.TEXTCHAT, MsgSendType.CP2A, empty, empty);
-    public static final MessagesRuleDef TEXTCHAT_DELETE_MSG
-            = new MessagesRuleDef(MessageName.TEXTCHAT_DELETE_MSG, MessageType.TEXTCHAT, MsgSendType.CP2M, asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), empty);
-
-    public static final MessagesRuleDef TEXTCHAT_DISABLE_CHAT
-            = new MessagesRuleDef(MessageName.TEXTCHAT_DISABLE_CHAT, MessageType.TEXTCHAT, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef TEXTCHAT_ENABLE_CHAT
-            = new MessagesRuleDef(MessageName.TEXTCHAT_ENABLE_CHAT, MessageType.TEXTCHAT, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-
-    public static final MessagesRuleDef TEXTCHAT_ASK_QUESTION
-            = new MessagesRuleDef(MessageName.TEXTCHAT_ASK_QUESTION, MessageType.TEXTCHAT, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.ANONYMOUSE_ADMIN));
-    public static final MessagesRuleDef TEXTCHAT_SHOW_QUESTION
-            = new MessagesRuleDef(MessageName.TEXTCHAT_SHOW_QUESTION, MessageType.TEXTCHAT, MsgSendType.CP2A, asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT), empty);
-    public static final MessagesRuleDef TEXTCHAT_HIDE_QUESTION
-            = new MessagesRuleDef(MessageName.TEXTCHAT_HIDE_QUESTION, MessageType.TEXTCHAT, MsgSendType.CP2A, asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT), empty);
-    public static final MessagesRuleDef TEXTCHAT_ANSWER_QUESTION
-            = new MessagesRuleDef(MessageName.TEXTCHAT_ANSWER_QUESTION, MessageType.TEXTCHAT, MsgSendType.CP2A, asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT), empty);
 
 
-    public static final MessagesRuleDef WHITEBOARD_CREATE_BOARD
-            = new MessagesRuleDef(MessageName.WHITEBOARD_CREATE_BOARD, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_DELETE_BOARD
-            = new MessagesRuleDef(MessageName.WHITEBOARD_DELETE_BOARD, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_SELECT_BOARD
-            = new MessagesRuleDef(MessageName.WHITEBOARD_SELECT_BOARD, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_SCROLL_BOARD
-            = new MessagesRuleDef(MessageName.WHITEBOARD_SCROLL_BOARD, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_SWITCH_PAGE
-            = new MessagesRuleDef(MessageName.WHITEBOARD_SWITCH_PAGE, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_FREE_OPERATION
-            = new MessagesRuleDef(MessageName.WHITEBOARD_FREE_OPERATION, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_SELECT_BRUSH
-            = new MessagesRuleDef(MessageName.WHITEBOARD_SELECT_BRUSH, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_POINTER_MOVE
-            = new MessagesRuleDef(MessageName.WHITEBOARD_POINTER_MOVE, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_FREE_DRAWING
-            = new MessagesRuleDef(MessageName.WHITEBOARD_FREE_DRAWING, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_DRAW_TEXT
-            = new MessagesRuleDef(MessageName.WHITEBOARD_DRAW_TEXT, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_DRAW_SHAPE
-            = new MessagesRuleDef(MessageName.WHITEBOARD_DRAW_SHAPE, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_ERASE_OBJECT
-            = new MessagesRuleDef(MessageName.WHITEBOARD_ERASE_OBJECT, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_UNDO_REDO
-            = new MessagesRuleDef(MessageName.WHITEBOARD_UNDO_REDO, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-    public static final MessagesRuleDef WHITEBOARD_CLEAR_ALL
-            = new MessagesRuleDef(MessageName.WHITEBOARD_CLEAR_ALL, MessageType.WHITEBOARD, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty);
-
-    // 这个消息的接收者为发送消息的人。
-    public static final MessagesRuleDef SYS_CAPTURE_SCREEN
-            = new MessagesRuleDef(MessageName.SYS_CAPTURE_SCREEN, MessageType.SYS, MsgSendType.CP2A, singletonList(ClassUserRole.TEACHER), empty, true);
     public static final MessagesRuleDef SYS_CAPTURE_SCREEN_URL
             = new MessagesRuleDef(MessageName.SYS_CAPTURE_SCREEN_URL, MessageType.SYS, MsgSendType.CP2P, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.ASSISTANT, ClassUserRole.TEACHER, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef SYS_NOTIFY_APP_STATUS
-            = new MessagesRuleDef(MessageName.SYS_NOTIFY_APP_STATUS, MessageType.SYS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.ANONYMOUSE_ADMIN));
+            = new MessagesRuleDef(MessageName.SYS_NOTIFY_APP_STATUS, MessageType.SYS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN, ClassUserRole.ANONYMOUSE_ADMIN));
 }

@@ -1,8 +1,12 @@
 package com.codyy.cms.events.cls;
 
+import com.codyy.cms.core.definition.RenderType;
+import com.codyy.cms.core.definition.TestType;
+
 import java.util.List;
 
-public class EndTestCardEvent {
+public class ExplainTestingEvent {
+
     /**
      * 试卷id
      */
@@ -12,17 +16,19 @@ public class EndTestCardEvent {
      */
     private int classTestId;
     /**
+     * "TEST" | "TEST_CARD", //测验或答题卡
+     */
+    private @TestType
+    String testType;
+    /**
      * 测验名称
      */
     private String testName;
     /**
-     * 是否测验讲解，为true时需要填写下面4个字段
-     */
-    private boolean explainingTest;
-    /**
      * isArray通过数组渲染 isAjax通过接口获取数据渲染
      */
-    private String type;
+    private @RenderType
+    String renderType;
     /**
      * 试卷以图片的形式，数组内容为图片的url地址
      */
@@ -52,6 +58,14 @@ public class EndTestCardEvent {
         this.classTestId = classTestId;
     }
 
+    public String getTestType() {
+        return testType;
+    }
+
+    public void setTestType(String testType) {
+        this.testType = testType;
+    }
+
     public String getTestName() {
         return testName;
     }
@@ -60,20 +74,12 @@ public class EndTestCardEvent {
         this.testName = testName;
     }
 
-    public boolean isExplainingTest() {
-        return explainingTest;
+    public String getRenderType() {
+        return renderType;
     }
 
-    public void setExplainingTest(boolean explainingTest) {
-        this.explainingTest = explainingTest;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setRenderType(String renderType) {
+        this.renderType = renderType;
     }
 
     public List<String> getData() {

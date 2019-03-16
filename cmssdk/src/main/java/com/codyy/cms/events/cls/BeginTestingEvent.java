@@ -13,6 +13,18 @@ public class BeginTestingEvent {
     private int classTestId;
     private int duration;
     private int totalNumber;
+    /**
+     *"TEST" | "TEST_CARD", //测验或答题卡
+     */
+    private String testType;
+
+    public String getTestType() {
+        return testType;
+    }
+
+    public void setTestType(String testType) {
+        this.testType = testType;
+    }
 
     public int getTestId() {
         return testId;

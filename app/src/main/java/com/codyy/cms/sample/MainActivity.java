@@ -16,15 +16,15 @@ import com.codyy.cms.events.JoinChannelEvent;
 import com.codyy.cms.events.LoginEvent;
 import com.codyy.cms.events.MemberCountChangedEvent;
 import com.codyy.cms.events.cls.AdjustVideoEvent;
-import com.codyy.cms.events.cls.BeginTestCardEvent;
 import com.codyy.cms.events.cls.BeginTestingEvent;
 import com.codyy.cms.events.cls.ClearAllHandUpEvent;
 import com.codyy.cms.events.cls.ClsEndEvent;
 import com.codyy.cms.events.cls.ClsStartEvent;
 import com.codyy.cms.events.cls.EndSigninEvent;
 import com.codyy.cms.events.cls.EndSpeakingEvent;
-import com.codyy.cms.events.cls.EndTestCardEvent;
 import com.codyy.cms.events.cls.EndTestingEvent;
+import com.codyy.cms.events.cls.ExitTestingEvent;
+import com.codyy.cms.events.cls.ExplainTestingEvent;
 import com.codyy.cms.events.cls.RestoreSpeakingEvent;
 import com.codyy.cms.events.cls.SelectSpeakerEvent;
 import com.codyy.cms.events.cls.SharingDesktopEvent;
@@ -183,11 +183,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 订阅开始测验事件
+     * 订阅开始测验/答题卡事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(BeginTestingEvent event) {
-        Logger.d("开始测验");
+        Logger.d("开始测验/答题卡");
     }
 
     /**
@@ -199,19 +199,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 订阅开始答题卡答题事件
+     * 订阅退出测验事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(BeginTestCardEvent event) {
-        Logger.d("开始答题卡答题");
+    public void onMessageEvent(ExitTestingEvent event) {
+        Logger.d("退出测验");
     }
 
     /**
-     * 订阅结束答题卡答题事件
+     * 订阅测验讲解事件
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(EndTestCardEvent event) {
-        Logger.d("结束答题卡答题");
+    public void onMessageEvent(ExplainTestingEvent event) {
+        Logger.d("测验讲解");
     }
 
     /**

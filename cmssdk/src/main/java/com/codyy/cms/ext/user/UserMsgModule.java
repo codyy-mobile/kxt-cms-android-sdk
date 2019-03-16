@@ -9,7 +9,6 @@ import com.codyy.cms.core.MessageFactory;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
-import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.core.definition.NoChatScope;
 import com.codyy.cms.core.definition.SpeakingState;
 import com.codyy.cms.utils.GsonUtils;
@@ -30,17 +29,17 @@ public class UserMsgModule extends AbstractMsgModule {
     private Map<String, LinkedList<Integer>> classUserRolesMap;
     private int myUserId;
     private String[] watchMsgNames = {
-            MessagesRuleDef.USER_ONLINE.name,
-            MessagesRuleDef.USER_OFFLIE.name,
-            MessagesRuleDef.USER_INFO.name,
-            MessagesRuleDef.CLASS_SIGNIN.name,
-            MessagesRuleDef.CLASS_HAND_UP.name,
-            MessagesRuleDef.CLASS_CANCEL_HAND_UP.name,
-            MessagesRuleDef.CLASS_SELECT_SPEAKER.name,
-            MessagesRuleDef.CLASS_SWITCH_SPEAKER.name,
-            MessagesRuleDef.CLASS_CLEAR_ALL_HAND_UP.name,
-            MessagesRuleDef.TEXTCHAT_DISABLE_CHAT.name,
-            MessagesRuleDef.TEXTCHAT_ENABLE_CHAT.name,
+            MessageName.USER_ONLINE,
+            MessageName.USER_OFFLIE,
+            MessageName.USER_INFO,
+            MessageName.CLASS_SIGNIN,
+            MessageName.CLASS_HAND_UP,
+            MessageName.CLASS_CANCEL_HAND_UP,
+            MessageName.CLASS_SELECT_SPEAKER,
+            MessageName.CLASS_SWITCH_SPEAKER,
+            MessageName.CLASS_CLEAR_ALL_HAND_UP,
+            MessageName.TEXTCHAT_DISABLE_CHAT,
+            MessageName.TEXTCHAT_ENABLE_CHAT,
     };
 
     public UserMsgModule(User user, MessageEngine messageEngine, MessageFactory messageFactory) {

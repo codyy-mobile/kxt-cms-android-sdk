@@ -7,7 +7,6 @@ import com.codyy.cms.core.MessageModule;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
-import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.events.textchat.TextChatDelMsgEvent;
 import com.codyy.cms.events.textchat.TextChatEnabledEvent;
 import com.codyy.cms.events.textchat.TextChatMsgEvent;
@@ -20,14 +19,14 @@ import java.util.Arrays;
 
 public class TextchatMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
-            MessagesRuleDef.TEXTCHAT_SEND_MSG.name,
-            MessagesRuleDef.TEXTCHAT_DELETE_MSG.name,
-            MessagesRuleDef.TEXTCHAT_DISABLE_CHAT.name,
-            MessagesRuleDef.TEXTCHAT_ENABLE_CHAT.name,
-            MessagesRuleDef.TEXTCHAT_ASK_QUESTION.name,
-            MessagesRuleDef.TEXTCHAT_SHOW_QUESTION.name,
-            MessagesRuleDef.TEXTCHAT_HIDE_QUESTION.name,
-            MessagesRuleDef.TEXTCHAT_ANSWER_QUESTION.name
+           MessageName.TEXTCHAT_SEND_MSG,
+           MessageName.TEXTCHAT_DELETE_MSG,
+           MessageName.TEXTCHAT_DISABLE_CHAT,
+           MessageName.TEXTCHAT_ENABLE_CHAT,
+           MessageName.TEXTCHAT_ASK_QUESTION,
+           MessageName.TEXTCHAT_SHOW_QUESTION,
+           MessageName.TEXTCHAT_HIDE_QUESTION,
+           MessageName.TEXTCHAT_ANSWER_QUESTION
     };
 
     public TextchatMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {

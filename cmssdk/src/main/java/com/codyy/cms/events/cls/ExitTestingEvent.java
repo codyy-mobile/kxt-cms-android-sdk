@@ -1,6 +1,6 @@
 package com.codyy.cms.events.cls;
 
-public class EndTestingEvent {
+public class ExitTestingEvent {
 
     /**
      *  试卷id

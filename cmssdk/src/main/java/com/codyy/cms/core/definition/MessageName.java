@@ -28,8 +28,9 @@ public @interface MessageName {
     String CLASS_RESTORE_SPEAKING = "class_restore_speaking";
     String CLASS_BEGIN_TESTING = "class_begin_testing";
     String CLASS_END_TESTING = "class_end_testing";
-    String CLASS_BEGIN_TESTCARD = "class_begin_testcard";
-    String CLASS_END_TESTCARD = "class_end_testcard";
+    String CLASS_SUBMIT_TESTING = "class_submit_testing";
+    String CLASS_EXIT_TESTING = "class_exit_testing";
+    String CLASS_EXPLAIN_TESTING = "class_explain_testing";
     String CLASS_TESTCARD_RESULT = "class_testcard_result";
     String CLASS_START_SHARING_DESKTOP = "class_start_sharing_desktop";
     String CLASS_STOP_SHARING_DESKTOP = "class_stop_sharing_desktop";

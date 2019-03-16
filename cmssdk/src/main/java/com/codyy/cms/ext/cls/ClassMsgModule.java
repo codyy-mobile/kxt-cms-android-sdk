@@ -7,17 +7,16 @@ import com.codyy.cms.core.MessageModule;
 import com.codyy.cms.core.definition.Message;
 import com.codyy.cms.core.definition.MessageName;
 import com.codyy.cms.core.definition.MessageType;
-import com.codyy.cms.core.definition.MessagesRuleDef;
 import com.codyy.cms.events.cls.AdjustVideoEvent;
-import com.codyy.cms.events.cls.BeginTestCardEvent;
 import com.codyy.cms.events.cls.BeginTestingEvent;
 import com.codyy.cms.events.cls.ClearAllHandUpEvent;
 import com.codyy.cms.events.cls.ClsEndEvent;
 import com.codyy.cms.events.cls.ClsStartEvent;
 import com.codyy.cms.events.cls.EndSigninEvent;
 import com.codyy.cms.events.cls.EndSpeakingEvent;
-import com.codyy.cms.events.cls.EndTestCardEvent;
 import com.codyy.cms.events.cls.EndTestingEvent;
+import com.codyy.cms.events.cls.ExitTestingEvent;
+import com.codyy.cms.events.cls.ExplainTestingEvent;
 import com.codyy.cms.events.cls.RestoreSpeakingEvent;
 import com.codyy.cms.events.cls.SelectSpeakerEvent;
 import com.codyy.cms.events.cls.SharingDesktopEvent;
@@ -32,29 +31,28 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.codyy.cms.core.definition.MessageName.CLASS_RESTORE_SPEAKING;
 
 public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
-            MessagesRuleDef.CLASS_START_WARMINGUP.name,
-            MessagesRuleDef.CLASS_STOP_WARMINGUP.name,
-            MessagesRuleDef.CLASS_START.name,
-            MessagesRuleDef.CLASS_END.name,
-            MessagesRuleDef.CLASS_START_SIGNIN.name,
-            MessagesRuleDef.CLASS_END_SIGNIN.name,
-            MessagesRuleDef.CLASS_CLEAR_ALL_HAND_UP.name,
-            MessagesRuleDef.CLASS_SELECT_SPEAKER.name,
-            MessagesRuleDef.CLASS_END_SPEAKING.name,
-            MessagesRuleDef.CLASS_SWITCH_SPEAKER.name,
-            CLASS_RESTORE_SPEAKING,
-            MessagesRuleDef.CLASS_BEGIN_TESTING.name,
-            MessagesRuleDef.CLASS_END_TESTING.name,
-            MessagesRuleDef.CLASS_BEGIN_TESTCARD.name,
-            MessagesRuleDef.CLASS_END_TESTCARD.name,
-            MessagesRuleDef.CLASS_TESTCARD_RESULT.name,
-            MessagesRuleDef.CLASS_START_SHARING_DESKTOP.name,
-            MessagesRuleDef.CLASS_STOP_SHARING_DESKTOP.name,
-            MessagesRuleDef.CLASS_ADJUST_VIDEO.name,
+            MessageName.CLASS_START_WARMINGUP,
+            MessageName.CLASS_STOP_WARMINGUP,
+            MessageName.CLASS_START,
+            MessageName.CLASS_END,
+            MessageName.CLASS_START_SIGNIN,
+            MessageName.CLASS_END_SIGNIN,
+            MessageName.CLASS_CLEAR_ALL_HAND_UP,
+            MessageName.CLASS_SELECT_SPEAKER,
+            MessageName.CLASS_END_SPEAKING,
+            MessageName.CLASS_SWITCH_SPEAKER,
+            MessageName.CLASS_RESTORE_SPEAKING,
+            MessageName.CLASS_EXPLAIN_TESTING,
+            MessageName.CLASS_BEGIN_TESTING,
+            MessageName.CLASS_END_TESTING,
+            MessageName.CLASS_EXIT_TESTING,
+            MessageName.CLASS_TESTCARD_RESULT,
+            MessageName.CLASS_START_SHARING_DESKTOP,
+            MessageName.CLASS_STOP_SHARING_DESKTOP,
+            MessageName.CLASS_ADJUST_VIDEO,
     };
 
     public ClassMsgModule(MessageEngine messageEngine, MessageFactory messageFactory) {
@@ -104,8 +102,15 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
      *
      * @param videoRate 视频码率
      */
-    public void createNotifyVideoRateMsg(int videoRate) {
+    public void sendNotifyVideoRateMsg(int videoRate) {
         sendMessage(getMessageFactory().createNotifyVideoRateMsg(videoRate));
+    }
+
+    /**
+     * 学员提交试卷
+     */
+    public void sendSubmitTestingMsg(int testId, int classTestId) {
+        sendMessage(getMessageFactory().createSubmitTestingMsg(testId, classTestId));
     }
 
     @Override
@@ -178,15 +183,15 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                 }.getType());
                 EbusUtils.post(endTestingEventMessage.body);
                 break;
-            case MessageName.CLASS_BEGIN_TESTCARD:
-                Message<BeginTestCardEvent> beginTestCardEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<BeginTestCardEvent>>() {
+            case MessageName.CLASS_EXIT_TESTING:
+                Message<ExitTestingEvent> exitTestingEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<ExitTestingEvent>>() {
                 }.getType());
-                EbusUtils.post(beginTestCardEventMessage.body);
+                EbusUtils.post(exitTestingEventMessage.body);
                 break;
-            case MessageName.CLASS_END_TESTCARD:
-                Message<EndTestCardEvent> endTestCardEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<EndTestCardEvent>>() {
+            case MessageName.CLASS_EXPLAIN_TESTING:
+                Message<ExplainTestingEvent> explainTestingEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<ExplainTestingEvent>>() {
                 }.getType());
-                EbusUtils.post(endTestCardEventMessage.body);
+                EbusUtils.post(explainTestingEventMessage.body);
                 break;
             case MessageName.CLASS_START_SHARING_DESKTOP:
                 Message<SharingDesktopEvent> sharingDesktopEventMessage = GsonUtils.bean2Bean(message, new TypeToken<Message<SharingDesktopEvent>>() {

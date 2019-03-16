@@ -54,7 +54,6 @@ public class CmsEngine {
 
     /**
      * 消息分发对象实例
-     *
      */
     private MessageDispatcher msgDispatcher;
     /**
@@ -228,9 +227,16 @@ public class CmsEngine {
             getClassMsgModule().sendEndSpeakingMsg();
         }
     }
-    public void createNotifyVideoRateMsg(int videoRate) {
+
+    public void sendNotifyVideoRateMsg(int videoRate) {
         if (getClassMsgModule() != null) {
-            getClassMsgModule().createNotifyVideoRateMsg(videoRate);
+            getClassMsgModule().sendNotifyVideoRateMsg(videoRate);
+        }
+    }
+
+    public void sendSubmitTestingMsg(int testId, int classTestId) {
+        if (getClassMsgModule() != null) {
+            getClassMsgModule().sendSubmitTestingMsg(testId, classTestId);
         }
     }
 
@@ -269,7 +275,6 @@ public class CmsEngine {
 
     /**
      * Unregister message module.
-     *
      */
     public void unregisterMsgModule(MessageModule... msgModules) {
         for (MessageModule msgModule : msgModules) {
