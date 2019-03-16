@@ -18,6 +18,7 @@ import com.codyy.cms.events.cls.EndSigninEvent;
 import com.codyy.cms.events.cls.EndSpeakingEvent;
 import com.codyy.cms.events.cls.EndTestCardEvent;
 import com.codyy.cms.events.cls.EndTestingEvent;
+import com.codyy.cms.events.cls.RestoreSpeakingEvent;
 import com.codyy.cms.events.cls.SelectSpeakerEvent;
 import com.codyy.cms.events.cls.SharingDesktopEvent;
 import com.codyy.cms.events.cls.StartSigninEvent;
@@ -31,6 +32,8 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static com.codyy.cms.core.definition.MessageName.CLASS_RESTORE_SPEAKING;
+
 public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
     private String[] watchMsgNames = {
             MessagesRuleDef.CLASS_START_WARMINGUP.name,
@@ -43,6 +46,7 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
             MessagesRuleDef.CLASS_SELECT_SPEAKER.name,
             MessagesRuleDef.CLASS_END_SPEAKING.name,
             MessagesRuleDef.CLASS_SWITCH_SPEAKER.name,
+            CLASS_RESTORE_SPEAKING,
             MessagesRuleDef.CLASS_BEGIN_TESTING.name,
             MessagesRuleDef.CLASS_END_TESTING.name,
             MessagesRuleDef.CLASS_BEGIN_TESTCARD.name,
@@ -87,6 +91,7 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
     public void sendCancelHandingUpMsg() {
         sendMessage(getMessageFactory().createCancelHandUpMsg());
     }
+
     /**
      * 结束发言
      */
@@ -96,6 +101,7 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
 
     /**
      * 发送视频码率
+     *
      * @param videoRate 视频码率
      */
     public void createNotifyVideoRateMsg(int videoRate) {
@@ -152,6 +158,14 @@ public class ClassMsgModule extends AbstractMsgModule implements MessageModule {
                     EbusUtils.post(switchSpeakerEventMessage.body);
                 } else {
                     //do nothing
+                }
+                break;
+            case MessageName.CLASS_RESTORE_SPEAKING:
+                for (int userId : message.header.targetUserIds) {
+                    if (userId == getMessageEngine().getCmsEngine().getUserMsgModule().getMe().attributes.userId) {//当处于连麦状态下，教师页面刷新后发消息给发言人恢复连麦
+                        // header.targetUserIds里填写发言人userId
+                        EbusUtils.post(new RestoreSpeakingEvent());
+                    }
                 }
                 break;
             case MessageName.CLASS_BEGIN_TESTING:

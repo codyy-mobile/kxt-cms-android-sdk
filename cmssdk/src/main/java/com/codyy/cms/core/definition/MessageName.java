@@ -25,6 +25,7 @@ public @interface MessageName {
     String CLASS_SELECT_SPEAKER = "class_select_speaker";
     String CLASS_END_SPEAKING = "class_end_speaking";
     String CLASS_SWITCH_SPEAKER = "class_switch_speaker";
+    String CLASS_RESTORE_SPEAKING = "class_restore_speaking";
     String CLASS_BEGIN_TESTING = "class_begin_testing";
     String CLASS_END_TESTING = "class_end_testing";
     String CLASS_BEGIN_TESTCARD = "class_begin_testcard";

@@ -21,17 +21,17 @@ import com.codyy.cms.events.cls.BeginTestingEvent;
 import com.codyy.cms.events.cls.ClearAllHandUpEvent;
 import com.codyy.cms.events.cls.ClsEndEvent;
 import com.codyy.cms.events.cls.ClsStartEvent;
-import com.codyy.cms.events.cls.EndExplainTestingEvent;
 import com.codyy.cms.events.cls.EndSigninEvent;
 import com.codyy.cms.events.cls.EndSpeakingEvent;
 import com.codyy.cms.events.cls.EndTestCardEvent;
 import com.codyy.cms.events.cls.EndTestingEvent;
-import com.codyy.cms.events.cls.ExplainTestingEvent;
+import com.codyy.cms.events.cls.RestoreSpeakingEvent;
 import com.codyy.cms.events.cls.SelectSpeakerEvent;
 import com.codyy.cms.events.cls.SharingDesktopEvent;
 import com.codyy.cms.events.cls.StartSigninEvent;
 import com.codyy.cms.events.cls.StartWarmupEvent;
 import com.codyy.cms.events.cls.StopWarmupEvent;
+import com.codyy.cms.events.cls.SwitchSpeakerEvent;
 import com.codyy.cms.events.textchat.TextChatDelMsgEvent;
 import com.codyy.cms.events.textchat.TextChatEnabledEvent;
 import com.codyy.cms.events.textchat.TextChatMsgEvent;
@@ -42,7 +42,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity {
-    //    final AndroidDeferredManager dm = new AndroidDeferredManager();
     private EditText editText;
 
     @Override
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         CmsManager.register(this);
         editText = findViewById(R.id.userId);
         CmsManager.init(new CmsEngineOpts("6ddb8bc251564e95af743486e76dc40e", ""), 1);
-        Log.e("Create",System.currentTimeMillis()+"");
+        Log.e("Create", System.currentTimeMillis() + "");
     }
 
     @Override
@@ -155,6 +154,24 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(SelectSpeakerEvent event) {
         Logger.d("指定发言（连麦用此消息）");
+    }
+
+    /**
+     * 订阅教师选择其它学生发言
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(SwitchSpeakerEvent event) {
+        Logger.d("教师选择其它学生发言");
+    }
+
+    /**
+     * 订阅恢复连麦事件
+     * 当处于连麦状态下，教师页面刷新后发消息给发言人恢复连麦
+     * 如果收到此消息，表示老师连麦的对象是当前登录的学生
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(RestoreSpeakingEvent event) {
+        Logger.d("恢复连麦");
     }
 
     /**
