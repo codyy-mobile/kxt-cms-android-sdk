@@ -15,7 +15,7 @@ public class UserStates {
      * 是否在举手
      */
     public boolean isHandingUp;
-    public String speakingState = SpeakingState.NO;
+    public @SpeakingState String speakingState = SpeakingState.NO;
     /**
      * 是否签过到
      */
