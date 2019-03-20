@@ -149,7 +149,7 @@ public class CmsEngine {
         rtmAccount = generateRtmAccount(loginOptions.getUserId());
         // 登录 Agora 信令系统
         try {
-            mRtmClient.login(loginOptions.isDebug ? null : SignalingToken.getOneDayToken(options.getAppId(), options.getAppCertificate(), rtmAccount), rtmAccount, new IResultCallback<Void>() {
+            mRtmClient.login(TextUtils.isEmpty(options.getToken()) ? null : options.getToken(), rtmAccount, new IResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void responseInfo) {
                     // Login succeeds.
@@ -308,7 +308,7 @@ public class CmsEngine {
      * 退出信令系统
      */
     public void logout() {
-        unregisterAllMsgModule();
+//        unregisterAllMsgModule();
         if (mRtmClient != null) {
             mRtmClient.logout(new IResultCallback<Void>() {
                 @Override

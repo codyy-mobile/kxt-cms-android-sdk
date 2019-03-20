@@ -9,7 +9,7 @@ public class CmsEngineOpts {
     /**
      * 声网提供的app certificate。
      */
-    private String appCertificate;
+    private String token;
     /**
      * 登录重试次数
      */
@@ -32,31 +32,31 @@ public class CmsEngineOpts {
     }
 
 
-    public CmsEngineOpts(String appId, String appCertificate) {
+    public CmsEngineOpts(String appId, String token) {
         this.appId = appId;
-        this.appCertificate = appCertificate;
+        this.token = token;
     }
 
 
 
-    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount) {
+    public CmsEngineOpts(String appId, String token, int reconnectCount) {
         this.appId = appId;
-        this.appCertificate = appCertificate;
+        this.token = token;
         this.reconnectCount = reconnectCount;
     }
 
 
 
-    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime) {
+    public CmsEngineOpts(String appId, String token, int reconnectCount, int reconnectTime) {
         this.appId = appId;
-        this.appCertificate = appCertificate;
+        this.token = token;
         this.reconnectCount = reconnectCount;
         this.reconnectTime = reconnectTime;
     }
 
-    public CmsEngineOpts(String appId, String appCertificate, int reconnectCount, int reconnectTime, int tokenLifeTime) {
+    public CmsEngineOpts(String appId, String token, int reconnectCount, int reconnectTime, int tokenLifeTime) {
         this.appId = appId;
-        this.appCertificate = appCertificate;
+        this.token = token;
         this.reconnectCount = reconnectCount;
         this.reconnectTime = reconnectTime;
         this.tokenLifeTime = tokenLifeTime;
@@ -71,12 +71,12 @@ public class CmsEngineOpts {
         this.appId = appId;
     }
 
-    public String getAppCertificate() {
-        return appCertificate;
+    public String getToken() {
+        return token;
     }
 
-    public void setAppCertificate(String appCertificate) {
-        this.appCertificate = appCertificate;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public int getReconnectCount() {

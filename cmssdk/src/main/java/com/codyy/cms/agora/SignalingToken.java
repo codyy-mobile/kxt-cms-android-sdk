@@ -9,7 +9,9 @@ import java.security.NoSuchAlgorithmException;
  * expiredTime       = "1546271999" // 授权时间戳
  * account           = "test@agora.io" //客户端定义的用户 ID
  * @see <a href="https://docs.agora.io/cn/2.4/addons/Signaling/Agora%20Platform/key_signaling#signaling-key">密钥说明</a>
+ * use server generated token value instead of
  */
+@Deprecated
 public class SignalingToken {
     /**
      * token       = "1:appId:expiredTime:md5(account + appId + appCertificate + expiredTime)"
