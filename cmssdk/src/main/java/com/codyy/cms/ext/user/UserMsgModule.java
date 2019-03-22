@@ -12,8 +12,10 @@ import com.codyy.cms.core.definition.MessageType;
 import com.codyy.cms.core.definition.NoChatScope;
 import com.codyy.cms.core.definition.SpeakingState;
 import com.codyy.cms.utils.GsonUtils;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -119,6 +121,18 @@ public class UserMsgModule extends AbstractMsgModule {
      */
     public void updateUsers(SparseArray<User> userInfoMap) {
         this.userInfoMap = userInfoMap;
+    }
+
+    /**
+     * 更新所有用户信息，一般在初始化的时候调用
+     */
+    public void updateUsers(String array) {
+        List<User> users = GsonUtils.fromJsonList(array,User.class);
+        for (User user : users) {
+            this.userInfoMap.put(user.getAttributes().getUserId(), user);
+            setClassUserRole(user);
+        }
+        getMessageEngine().updateMemberCount(getUserCount());
     }
 
     /**

@@ -4,14 +4,15 @@ import com.codyy.cms.core.LoginOptions;
 
 public class User {
     public UserAttributes attributes;
-    public Environment env;
+    public Environment environment;
     public UserStates states;
 
     public User(LoginOptions loginOpts) {
         this.attributes = new UserAttributes();
-        this.env = new Environment();
+        this.attributes.loginTime=System.currentTimeMillis();
+        this.environment = new Environment();
         this.states = new UserStates();
-
+        this.states.isOnline=true;
         this.attributes.setUserId(loginOpts.getUserId());
         this.attributes.setUserName(loginOpts.getUserName());
         this.attributes.setUserRole(loginOpts.getUserRole());
@@ -26,12 +27,12 @@ public class User {
         this.attributes = attributes;
     }
 
-    public Environment getEnv() {
-        return env;
+    public Environment getEnvironment() {
+        return environment;
     }
 
-    public void setEnv(Environment env) {
-        this.env = env;
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
     }
 
     public UserStates getStates() {

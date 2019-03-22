@@ -147,4 +147,18 @@ public class CmsManager {
     public static void sendChatMsg(@NonNull String msg) {
         CmsEngine.getInstance().sendChatMsg(msg);
     }
+
+    /**
+     * 发送摄像头及麦克风权限
+     */
+    public static void setMediaGrant(boolean video, boolean audio) {
+        CmsEngine.getInstance().setMediaGrant(video, audio);
+    }
+
+    /**
+     * 初始化用户列表
+     */
+    public static void updateUsers(String users) {
+        CmsEngine.getInstance().updateUsers(users);
+    }
 }

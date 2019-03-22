@@ -75,6 +75,7 @@ public class MessageFactory {
         header.type = msgRuleDef.type;
         header.sendType = msgRuleDef.sendType;
         header.userId = userId;
+        header.rtmAccount=userMsgModule.getMessageEngine().getCmsEngine().generateRtmAccount(userId);
         header.timestamp = System.currentTimeMillis();
 
         ArrayList<Integer> targetUserIds = this.getTargetUserIds(msgRuleDef);
@@ -113,6 +114,12 @@ public class MessageFactory {
      */
     public Message createSignInMsg() {
         return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.CLASS_SIGNIN));
+    }
+    public Message onlineMsg() {
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.USER_ONLINE));
+    }
+    public Message offlineMsg() {
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.USER_OFFLIE));
     }
 
     /**
@@ -246,7 +253,7 @@ public class MessageFactory {
      */
     public Message createCaptureScreenUrlMsg(String originalMsgId, String imageUrl, ArrayList<Integer> targetUserIds) {
         User user = this.getDefaultUser();
-        Message message = new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_CAPTURE_SCREEN_URL), new Screenshot(originalMsgId, imageUrl, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+        Message message = new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_CAPTURE_SCREEN_URL), new Screenshot(originalMsgId, imageUrl, user.attributes.classUserRole, user.environment.getDevice(), user.environment.getOs()));
         message.header.targetUserIds = targetUserIds;
         return message;
     }
@@ -266,7 +273,7 @@ public class MessageFactory {
      */
     public Message createSwitchAppMsg(@AppActive String action, int activeDuration, int inactiveDuration) {
         User user = this.getDefaultUser();
-        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_NOTIFY_APP_STATUS), new SwitchApp(action, activeDuration, inactiveDuration, user.attributes.classUserRole, user.env.getDevice(), user.env.getOs()));
+        return new Message<>(this.createDefaultMessageHeader(MessagesRuleDef.SYS_NOTIFY_APP_STATUS), new SwitchApp(action, activeDuration, inactiveDuration, user.attributes.classUserRole, user.environment.getDevice(), user.environment.getOs()));
     }
     /*end->sys***********************************************************************************/
 

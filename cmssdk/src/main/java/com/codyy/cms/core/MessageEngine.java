@@ -15,6 +15,8 @@ import com.codyy.cms.utils.GsonUtils;
 import com.google.gson.Gson;
 import com.orhanobut.logger.Logger;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -142,10 +144,11 @@ public class MessageEngine {
         Logger.i("[Sent sender=" + header.userId + ", msg=" + header.name + " ]: " + new Gson().toJson(message));
         if (MsgSendType.CP2M.equals(header.sendType)) {
             if (header.targetUserIds.size() == 1) {
-                Message msg = (Message) CombineUtils.combineSydwCore(message, new Message());
-                msg.header.targetUserIds = new ArrayList<>();
-                msg.header.targetUserIds.add(header.targetUserIds.get(0));
-                msg.header.timestamp = System.currentTimeMillis();
+//                Message msg = (Message) CombineUtils.combineSydwCore(message, new Message());
+//                msg.header.targetUserIds = new ArrayList<>();
+//                msg.header.targetUserIds.add(header.targetUserIds.get(0));
+//                msg.header.timestamp = System.currentTimeMillis();
+                message.header.sendType=MsgSendType.GP2P;
                 RtmMessage sendMsg = RtmMessage.createMessage();
                 sendMsg.setText(new Gson().toJson(message));
                 cmsEngine.getRtmClient().sendMessageToPeer(userIdMap.get(header.targetUserIds.get(0)), sendMsg, state -> {
@@ -153,13 +156,17 @@ public class MessageEngine {
                 });
             } else {
                 for (int i : header.targetUserIds) {
-                    Message msg = (Message) CombineUtils.combineSydwCore(message, new Message());
+                    Message msg = new Message<>(new MessageHeader(),new JSONObject());
+                    msg.body=message.body;
+                    msg.header=message.header;
+                    msg.header.id=getNextMsgId();
+                    msg.header.sendType=MsgSendType.GP2P;
                     msg.header.targetUserIds = new ArrayList<>();
                     msg.header.targetUserIds.add(header.targetUserIds.get(i));
                     msg.header.timestamp = System.currentTimeMillis();
                     RtmMessage sendMsg = RtmMessage.createMessage();
-                    sendMsg.setText(new Gson().toJson(message));
-                    cmsEngine.getRtmClient().sendMessageToPeer(userIdMap.get(header.targetUserIds.get(0)), sendMsg, state -> {
+                    sendMsg.setText(new Gson().toJson(msg));
+                    cmsEngine.getRtmClient().sendMessageToPeer(userIdMap.get(header.targetUserIds.get(i)), sendMsg, state -> {
 //                        Logger.i("sendMessageToPeer", state);
                     });
                 }
@@ -255,6 +262,14 @@ public class MessageEngine {
     }
 
     /**
+     * 更新在线人数
+     */
+    public void updateMemberCount(int count) {
+        mChannelMemberCount = new AtomicInteger(count);
+        EbusUtils.post(new MemberCountChangedEvent(mChannelMemberCount.intValue()));
+    }
+
+    /**
      * 发送频道消息
      * 在成功加入频道之后，用户可以开始向该频道发送消息。
      * 调用 RtmChannel 实例的 sendMessage 方法向该频道发送消息。在该方法中：
@@ -291,6 +306,7 @@ public class MessageEngine {
                     EbusUtils.post(new JoinChannelEvent(true, null));
                     // 设置用户id和信令账号
                     setUserIdAccoutnMap(cmsEngine.getUserMsgModule().getMe().attributes.userId, cmsEngine.getRtmAccount());
+                    cmsEngine.getUserMsgModule().getMessageFactory().onlineMsg();
                     // 用户加入频道后立即发送广播消息通知频道内所有用户更新用户信息。
                     cmsEngine.getUserMsgModule().sendUserInfoMsg();
                 }
@@ -305,7 +321,6 @@ public class MessageEngine {
             EbusUtils.post(new JoinChannelEvent(false, new ErrorInfo(com.codyy.cms.agora.RtmStatusCode.JoinChannelError.JOIN_CHANNEL_NULL)));
         }
     }
-
 
     /**
      * 调用 RtmChannel 实例的 leave 方法可以退出该频道。退出频道之后可以调用 join 方法再重新加入频道。

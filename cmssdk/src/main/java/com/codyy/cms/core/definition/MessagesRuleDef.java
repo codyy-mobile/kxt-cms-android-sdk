@@ -63,30 +63,32 @@ public class MessagesRuleDef {
     /**
      * 消息定义和规则定义
      */
+    public static final MessagesRuleDef USER_ONLINE                 = new MessagesRuleDef(MessageName.USER_ONLINE, MessageType.USER, MsgSendType.CP2A, empty, empty);
+    public static final MessagesRuleDef USER_OFFLIE               = new MessagesRuleDef(MessageName.USER_OFFLIE,  MessageType.USER, MsgSendType.CP2A,empty,empty);
     public static final MessagesRuleDef USER_INFO
-            = new MessagesRuleDef(MessageName.USER_INFO, MessageType.USER, MsgSendType.CP2A, empty, empty);
+            = new MessagesRuleDef(MessageName.USER_INFO, MsgSendType.CP2A, MessageType.USER, empty, empty);
 
 
     public static final MessagesRuleDef CLASS_SIGNIN
-            = new MessagesRuleDef(MessageName.CLASS_SIGNIN, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN, ClassUserRole.ANONYMOUSE_ADMIN));
+            = new MessagesRuleDef(MessageName.CLASS_SIGNIN, MsgSendType.CP2M, MessageType.CLASS, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN, ClassUserRole.ANONYMOUSE_ADMIN));
     public static final MessagesRuleDef CLASS_SUBMIT_TESTING
-            = new MessagesRuleDef(MessageName.CLASS_SUBMIT_TESTING, MessageType.CLASS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
+            = new MessagesRuleDef(MessageName.CLASS_SUBMIT_TESTING, MsgSendType.CP2M, MessageType.CLASS, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef CLASS_HAND_UP
-            = new MessagesRuleDef(MessageName.CLASS_HAND_UP, MessageType.CLASS, MsgSendType.CP2M, asList(ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
+            = new MessagesRuleDef(MessageName.CLASS_HAND_UP, MsgSendType.CP2M,MessageType.CLASS,  asList(ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef CLASS_CANCEL_HAND_UP
-            = new MessagesRuleDef(MessageName.CLASS_CANCEL_HAND_UP, MessageType.CLASS, MsgSendType.CP2M, asList(ClassUserRole.TEACHER, ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
+            = new MessagesRuleDef(MessageName.CLASS_CANCEL_HAND_UP,  MsgSendType.CP2M,MessageType.CLASS, asList(ClassUserRole.TEACHER, ClassUserRole.STUDENT, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN), asList(ClassUserRole.TEACHER, ClassUserRole.ANONYMOUSE_ADMIN, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef CLASS_END_SPEAKING
-            = new MessagesRuleDef(MessageName.CLASS_END_SPEAKING, MessageType.CLASS, MsgSendType.CP2A, asList(ClassUserRole.TEACHER, ClassUserRole.STUDENT), empty);
+            = new MessagesRuleDef(MessageName.CLASS_END_SPEAKING, MsgSendType.CP2A, MessageType.CLASS, asList(ClassUserRole.TEACHER, ClassUserRole.STUDENT), empty);
     public static final MessagesRuleDef CLASS_NOTIFY_VIDEO_RATE
-            = new MessagesRuleDef(MessageName.CLASS_NOTIFY_VIDEO_RATE, MessageType.CLASS, MsgSendType.CP2P, singletonList(ClassUserRole.STUDENT), singletonList(ClassUserRole.ANONYMOUSE_ADMIN));
+            = new MessagesRuleDef(MessageName.CLASS_NOTIFY_VIDEO_RATE, MsgSendType.CP2P, MessageType.CLASS, singletonList(ClassUserRole.STUDENT), singletonList(ClassUserRole.ANONYMOUSE_ADMIN));
 
 
     public static final MessagesRuleDef TEXTCHAT_SEND_MSG
-            = new MessagesRuleDef(MessageName.TEXTCHAT_SEND_MSG, MessageType.TEXTCHAT, MsgSendType.CP2A, empty, empty);
+            = new MessagesRuleDef(MessageName.TEXTCHAT_SEND_MSG, MsgSendType.CP2A, MessageType.TEXTCHAT, empty, empty);
 
 
     public static final MessagesRuleDef SYS_CAPTURE_SCREEN_URL
-            = new MessagesRuleDef(MessageName.SYS_CAPTURE_SCREEN_URL, MessageType.SYS, MsgSendType.CP2P, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.ASSISTANT, ClassUserRole.TEACHER, ClassUserRole.CLASS_ADMIN));
+            = new MessagesRuleDef(MessageName.SYS_CAPTURE_SCREEN_URL, MsgSendType.CP2P, MessageType.SYS, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.ASSISTANT, ClassUserRole.TEACHER, ClassUserRole.CLASS_ADMIN));
     public static final MessagesRuleDef SYS_NOTIFY_APP_STATUS
-            = new MessagesRuleDef(MessageName.SYS_NOTIFY_APP_STATUS, MessageType.SYS, MsgSendType.CP2M, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN, ClassUserRole.ANONYMOUSE_ADMIN));
+            = new MessagesRuleDef(MessageName.SYS_NOTIFY_APP_STATUS, MsgSendType.CP2M, MessageType.SYS, singletonList(ClassUserRole.STUDENT), asList(ClassUserRole.TEACHER, ClassUserRole.ASSISTANT, ClassUserRole.CLASS_ADMIN, ClassUserRole.ANONYMOUSE_ADMIN));
 }

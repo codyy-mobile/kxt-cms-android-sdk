@@ -111,7 +111,7 @@ public class CmsEngine {
             this.liveClassId = liveClassId;
             if (mRtmClient != null) return;
             mRtmClient = RtmClient.createInstance(application, opts.getAppId(), mRtmClientListener);
-            setLogLevel(0);
+//            setLogLevel(0);
         } catch (Exception e) {
             Logger.e(Log.getStackTraceString(e));
             throw new RuntimeException("NEED TO check rtc sdk init fatal error\n" + Log.getStackTraceString(e));
@@ -266,6 +266,16 @@ public class CmsEngine {
         }
     }
 
+    public void setMediaGrant(boolean video, boolean audio) {
+        getUserMsgModule().getMe().environment.setAudio(video);
+        getUserMsgModule().getMe().environment.setVideo(audio);
+        getUserMsgModule().sendUserInfoMsg();
+    }
+
+    public void updateUsers(String users) {
+        getUserMsgModule().updateUsers(users);
+    }
+
     /**
      * Register message module and subscribe message.
      */
@@ -310,6 +320,7 @@ public class CmsEngine {
     public void logout() {
 //        unregisterAllMsgModule();
         if (mRtmClient != null) {
+            getUserMsgModule().getMessageFactory().offlineMsg();
             mRtmClient.logout(new IResultCallback<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -348,7 +359,7 @@ public class CmsEngine {
      * Generate rtmAccount with live class id and user id, the rtmAccount is used to register in Agora RTM system.
      * Account: User-[liveclassID]-[userId]@codyy.com
      */
-    private String generateRtmAccount(int userId) {
+    public String generateRtmAccount(int userId) {
         return "User" + CmsConfig.SEPARATOR_OF_ACCOUNT + this.liveClassId + CmsConfig.SEPARATOR_OF_ACCOUNT
                 + userId + CmsConfig.SUFFIX_OF_ACCOUNT;
     }
